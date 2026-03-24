@@ -1,0 +1,7 @@
+[config]
+name = "Chords"
+
+[chords]
+',s' = { name = "Settings" }
+',r' = { name = "Reload Config" }
+',q' = { name = "Quit Chord" }

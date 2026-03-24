@@ -1,0 +1,25 @@
+{
+  "name": "chords",
+  "type": "module",
+  "imports": {
+    "#/*": "./src/*"
+  },
+  "exports": {
+    "./*": "./dist/*"
+  },
+  "engines": {
+    "pnpm": ">=9"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "jxa-run-compat": "^1.5.0",
+    "nano-spawn-compat": "^2.0.6"
+  },
+  "devDependencies": {
+    "@jxa/global-type": "^1.4.0",
+    "llrt-types": "github:awslabs/llrt#path:/types",
+    "typescript": "^6.0.2"
+  }
+}

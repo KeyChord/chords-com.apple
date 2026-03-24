@@ -1,0 +1,21 @@
+[config]
+name = "macOS"
+
+[chords]
+'?/' = { name = "Global Apps" }
+
+'?\' = { name = "System Apps/Shortucts"}
+'\f' = { name = "Finder", shell = "open -a Finder" }
+'\q' = { name = "Force Quit", shortcut = "opt+cmd+esc" }
+'\ls' = { name = "Lock Screen", shortcut = "opt+cmd+esc" }
+'\lo' = { name = "Log Out", shortcut = "ctrl+cmd+q" }
+'\lq' = { name = "Log Quit", shortcut = "opt+shift+cmd+q" }
+
+'?\b' = { name = "Brightness"}
+'\bu' = { name = "Brightness Up", shortcut = "BrightnessUp" }
+'\bd' = { name = "Brightness Down", shortcut = "BrightnessDown" }
+
+'?\v' = { name = "Volume"}
+'\vu' = { name = "Volume Up", shortcut = "AudioVolumeUp" }
+'\vd' = { name = "Volume Down", shortcut = "AudioVolumeDown" }
+'\vm' = { name = "Volume Mute", shortcut = "AudioVolumeMute" }

@@ -1,0 +1,82 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      jxa-run-compat:
+        specifier: ^1.5.0
+        version: 1.5.0
+      nano-spawn-compat:
+        specifier: ^2.0.6
+        version: 2.0.6
+    devDependencies:
+      '@jxa/global-type':
+        specifier: ^1.4.0
+        version: 1.4.0
+      llrt-types:
+        specifier: github:awslabs/llrt#path:/types
+        version: https://codeload.github.com/awslabs/llrt/tar.gz/fa65a85faa1af38a45bed5d6703d61ad84737894#path:/types
+      typescript:
+        specifier: ^6.0.2
+        version: 6.0.2
+
+packages:
+
+  '@jxa/global-type@1.4.0':
+    resolution: {integrity: sha512-3Gg632we69oelbanFFQ1XbKTfqEYzwQxg00O13XG2an6IJzP829XLKjv0EDy/UtublyZbZFCk1CmDXq9ku4oGw==}
+
+  '@jxa/types@1.4.0':
+    resolution: {integrity: sha512-3MNk9eYHAdNVUGASHrfvadVL5sE/NMet0CAugHERsofmLp4SYRGCD+sXAMjlnpRjL1g3q7nkAU9wUL2h0Z+LQA==}
+
+  ansi-regex@6.2.2:
+    resolution: {integrity: sha512-Bq3SmSpyFHaWjPk8If9yc6svM8c56dB5BAtW4Qbw5jHTwwXXcTLoRMkpDJp6VL0XzlWaCHTXrkFURMYmD0sLqg==}
+    engines: {node: '>=12'}
+
+  jxa-run-compat@1.5.0:
+    resolution: {integrity: sha512-MQf+ZcV8pXRFCbDhuxr9vWRvzT/j9OpQkJlpUE6pKdoJrAYr14cLfoVscuum88JuBFIjijNZc2Jz0zgqER1ipA==}
+
+  llrt-types@https://codeload.github.com/awslabs/llrt/tar.gz/fa65a85faa1af38a45bed5d6703d61ad84737894#path:/types:
+    resolution: {path: /types, tarball: https://codeload.github.com/awslabs/llrt/tar.gz/fa65a85faa1af38a45bed5d6703d61ad84737894}
+    version: 0.0.1
+
+  nano-spawn-compat@2.0.6:
+    resolution: {integrity: sha512-oy4yzPlwTs8Pfy5QsLf9dFxdRWXVB8BYApVFZCFkmh7oJkreJXLASj4RjGUbz5Nxd+0fY/fDRqco4MzYsK2rrQ==}
+    engines: {node: '>=20.17'}
+
+  strip-ansi@7.2.0:
+    resolution: {integrity: sha512-yDPMNjp4WyfYBkHnjIRLfca1i6KMyGCtsVgoKe/z1+6vukgaENdgGBZt+ZmKPc4gavvEZ5OgHfHdrazhgNyG7w==}
+    engines: {node: '>=12'}
+
+  typescript@6.0.2:
+    resolution: {integrity: sha512-bGdAIrZ0wiGDo5l8c++HWtbaNCWTS4UTv7RaTH/ThVIgjkveJt83m74bBHMJkuCbslY8ixgLBVZJIOiQlQTjfQ==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
+snapshots:
+
+  '@jxa/global-type@1.4.0':
+    dependencies:
+      '@jxa/types': 1.4.0
+
+  '@jxa/types@1.4.0': {}
+
+  ansi-regex@6.2.2: {}
+
+  jxa-run-compat@1.5.0: {}
+
+  llrt-types@https://codeload.github.com/awslabs/llrt/tar.gz/fa65a85faa1af38a45bed5d6703d61ad84737894#path:/types: {}
+
+  nano-spawn-compat@2.0.6:
+    dependencies:
+      strip-ansi: 7.2.0
+
+  strip-ansi@7.2.0:
+    dependencies:
+      ansi-regex: 6.2.2
+
+  typescript@6.0.2: {}

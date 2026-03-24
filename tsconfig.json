@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "target": "ESNext",
+    "module": "nodenext",
+    "moduleDetection": "force",
+    "allowJs": true,
+    "types": ["llrt-types"],
+    "paths": {
+      "#/*": ["./src/*"]
+    },
+    "moduleResolution": "node16",
+    "strict": true,
+    "skipLibCheck": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+  }
+}

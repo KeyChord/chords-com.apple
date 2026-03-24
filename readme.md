@@ -36,3 +36,7 @@ These are the default chords that come bundled with Chord. If you're creating yo
 `g` = Go to\
 `q` = Quit (instead of `c` for close, reduces conflicts)\
 `,` Settings
+
+## Creating your own Chord Package
+
+Clone this repo!

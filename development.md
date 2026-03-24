@@ -1,0 +1,44 @@
+# JavaScript
+
+## Recommended Setup
+
+Use [pnpm] because it supports specifying a dependency which is subdirectory of a GitHub repository, which is necessary since `LLRT` doesn't have an npm package for its types:
+
+```jsonc
+// package.json
+{
+  "devDependencies": {
+    "llrt-types": "github:awslabs/llrt#path:/types",
+    // ...
+  },
+}
+```
+
+Make sure your `tsconfig.json` has the `types` property set to `llrt-types`:
+
+```jsonc
+// tsconfig.json
+{
+  "compilerOptions": {
+    "types": ["llrt-types"],
+    // ...
+  },
+}
+```
+
+## Recommended Packages
+
+- [nano-spawn-compat](https://github.com/leonsilicon/nano-spawn-compat) - A more ergonomic `child_process.spawn` that works in LLRT.
+- [bplist-lossless](https://github.com/leonsilicon/bplist-lossless) - A binary plist parser specifically tailored for edits by avoiding loss of precision during parsing and re-serialization.
+- [doctor-json](https://github.com/privatenumber/doctor-json) - A JSON editor that preserves all existing formatting/comments
+- [keycode-ts2](https://github.com/leonsilicon/keycode-ts2) - A TypeScript port of the [Rust `keycode` crate](https://crates.io/crates/keycode) which uses the Chromium keycode names as the source of truth (_Chords_ uses these keycode names as the source of truth).
+
+## `chord`
+
+The built-in `chord` module also exposes:
+
+```ts
+export function setAppNeedsRelaunch(bundleId: string, needsRelaunch: boolean): void;
+```
+
+This marks or clears an app in the settings UI and gives the user a one-click relaunch button.
