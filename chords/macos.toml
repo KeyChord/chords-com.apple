@@ -10,53 +10,9 @@ export const menu = buildMenuHandler();
 [chords]
 '?/' = { name = "Global Apps" }
 
-'\q' = { name = "Force Quit", shortcut = "opt+cmd+esc" }
-'\ls' = { name = "Lock Screen", shortcut = "opt+cmd+esc" }
-'\lo' = { name = "Log Out", shortcut = "ctrl+cmd+q" }
-'\lq' = { name = "Log Quit", shortcut = "opt+shift+cmd+q" }
-
-'?\b' = { name = "Brightness"}
-'\bu' = { name = "Brightness Up", shortcut = "BrightnessUp" }
-'\bd' = { name = "Brightness Down", shortcut = "BrightnessDown" }
-
-'?\v' = { name = "Volume"}
-'\vu' = { name = "Volume Up", shortcut = "AudioVolumeUp" }
-'\vd' = { name = "Volume Down", shortcut = "AudioVolumeDown" }
-'\vm' = { name = "Volume Mute", shortcut = "AudioVolumeMute" }
-
-# Built-in macOS window management shortcuts
-# Can be overriden if using a dedicated window manager such as yabai, Aerospace, etc.
-'?[' = { name = "Window Management" }
-
-# Move and Resize
-'[l' = { name = "Left", shortcut = "ctrl+fn+left" }
-'[r' = { name = "Right", shortcut = "ctrl+fn+right" }
-'[t' = { name = "Top", shortcut = "ctrl+fn+up" }
-'[b' = { name = "Bottom", shortcut = "ctrl+fn+down" }
-'[tl' = { name = "Top Left", 'args:menu' = ["Window", "Move & Resize", "Top Left"] }
-'[tr' = { name = "Top Right", 'args:menu' = ["Window", "Move & Resize", "Top Right"] }
-'[bl' = { name = "Bottom Left", 'args:menu' = ["Window", "Move & Resize", "Bottom Left"] }
-'[br' = { name = "Bottom Right", 'args:menu' = ["Window", "Move & Resize", "Bottom Right"] }
-'[lr' = { name = "Left Right", shortcut = "ctrl+fn+shift+left" }
-'[rl' = { name = "Right Left", shortcut = "ctrl+fn+shift+right" }
-'[tb' = { name = "Top Bottom", shortcut = "ctrl+fn+shift+up" }
-'[bt' = { name = "Bottom Top", shortcut = "ctrl+fn+shift+down" }
-'[q' = { name = "Quarters", 'args:menu' = ["Window", "Move & Resize", "Quarters"] }
-'[s[' = { name = "Size: Previous", shortcut = "ctrl+fn+r" }
-
-'[m' = { name = "Minimize", shortcut = "cmd+m" }
-'[z' = { name = "Zoom", 'args:menu' = ["Window", 'Zoom'] }
-'[f' = { name = "Fill", shortcut = "ctrl+fn+f" }
-'[c' = { name = "Center", shortcut = "ctrl+fn+c" }
-'[fl' = { name = "Fullscreen Left", 'args:menu' = ["Window", "Full Screen Tile", "Left of Screen"] }
-'[fr' = { name = "Fullscreen Right", 'args:menu' = ["Window", "Full Screen Tile", "Right of Screen"] }
-'[a' = { name = "All to Front", 'args:menu' = ["Window", "Bring All to Front"] }
-'[[' = { name = "Previous Window" }
-'[]' = { name = "Next Window" }
-
 # Comma because `Comma`nd
 # The comma is a special "global key" because it can be overriden by apps (for example, if an app uses cmd+shift+z instead of cmd+y for undo).
-# We define these "universal shortcuts" so that we don't need to redefine them in every app.
+# We define these "universal shortcuts" so that they work cross-platform (ctrl on Windows, cmd on macOS), and so we don't need to redefine them in every app
 '?,' = { name = "Universal Commands" }
 ',a' = { name = "Select All", shortcut = "cmd+a" }
 ',s' = { name = "Save", shortcut = "cmd+s" }
@@ -78,26 +34,3 @@ export const menu = buildMenuHandler();
 ',,' = { name = "Settings", shortcut = "cmd+," }
 ',=' = { name = "Zoom In", shortcut = "cmd+=" }
 ',-' = { name = "Zoom Out", shortcut = "cmd+-" }
-
-'?-' = { name = "Menu Bar" }
-'-0' = { name = "Menu Bar: Apple Icon", 'args:menu' = [0] }
-'-1' = { name = "Menu Bar: Item 1", 'args:menu' = [1] }
-'-2' = { name = "Menu Bar: Item 2", 'args:menu' = [2] }
-'-3' = { name = "Menu Bar: Item 3", 'args:menu' = [3] }
-'-4' = { name = "Menu Bar: Item 4", 'args:menu' = [4] }
-'-5' = { name = "Menu Bar: Item 5", 'args:menu' = [5] }
-'-6' = { name = "Menu Bar: Item 6", 'args:menu' = [6] }
-'-7' = { name = "Menu Bar: Item 7", 'args:menu' = [7] }
-'-8' = { name = "Menu Bar: Item 8", 'args:menu' = [8] }
-'-9' = { name = "Menu Bar: Item 9", 'args:menu' = [9] }
-
-'?=' = { name = "Tray" }
-'=1' = { name = "Tray: Item 1" }
-'=2' = { name = "Tray: Item 2" }
-'=3' = { name = "Tray: Item 3" }
-'=4' = { name = "Tray: Item 4" }
-'=5' = { name = "Tray: Item 5" }
-'=6' = { name = "Tray: Item 6" }
-'=7' = { name = "Tray: Item 7" }
-'=8' = { name = "Tray: Item 8" }
-'=9' = { name = "Tray: Item 9" }

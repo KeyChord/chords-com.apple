@@ -1,0 +1,22 @@
+[config]
+name = "macOS System Actions"
+
+[config.js]
+module = '''
+import buildMenuHandler from 'dist/menu.js';
+export const menu = buildMenuHandler();
+'''
+
+'\q' = { name = "Force Quit", shortcut = "opt+cmd+esc" }
+'\ls' = { name = "Lock Screen", shortcut = "opt+cmd+esc" }
+'\lo' = { name = "Log Out", shortcut = "ctrl+cmd+q" }
+'\lq' = { name = "Log Quit", shortcut = "opt+shift+cmd+q" }
+
+'?\b' = { name = "Brightness"}
+'\bu' = { name = "Brightness Up", shortcut = "BrightnessUp" }
+'\bd' = { name = "Brightness Down", shortcut = "BrightnessDown" }
+
+'?\v' = { name = "Volume"}
+'\vu' = { name = "Volume Up", shortcut = "AudioVolumeUp" }
+'\vd' = { name = "Volume Down", shortcut = "AudioVolumeDown" }
+'\vm' = { name = "Volume Mute", shortcut = "AudioVolumeMute" }

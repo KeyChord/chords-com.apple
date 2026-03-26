@@ -1,0 +1,20 @@
+[config]
+name = "macOS Menu Bar"
+
+[config.js]
+module = '''
+import buildMenuHandler from 'dist/menu.js';
+export const buildMenuHandler();
+'''
+
+'?-' = { name = "Menu Bar" }
+'-0' = { name = "Menu Bar: Item 0 (Apple Icon)", args = [0] }
+'-1' = { name = "Menu Bar: Item 1", args = [1] }
+'-2' = { name = "Menu Bar: Item 2", args = [2] }
+'-3' = { name = "Menu Bar: Item 3", args = [3] }
+'-4' = { name = "Menu Bar: Item 4", args = [4] }
+'-5' = { name = "Menu Bar: Item 5", args = [5] }
+'-6' = { name = "Menu Bar: Item 6", args = [6] }
+'-7' = { name = "Menu Bar: Item 7", args = [7] }
+'-8' = { name = "Menu Bar: Item 8", args = [8] }
+'-9' = { name = "Menu Bar: Item 9", args = [9] }
