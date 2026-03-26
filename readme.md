@@ -16,6 +16,7 @@ You can also use this Chord Package as a template for creating your own chords. 
 `/` Global Shortcuts / Applications\
 `-` Menu Bar\
 `=` Tray\
+`.` Dock\
 `[` Window Management
 
 ## Directions

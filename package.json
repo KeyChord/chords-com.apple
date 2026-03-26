@@ -11,17 +11,20 @@
     "pnpm": ">=9"
   },
   "scripts": {
-    "build": "esbuild src/* --bundle --outdir=dist --platform=node --target=node18 --format=esm"
+    "build:swift": "swiftc swift/ax_element_at.swift -o dist/bin/ax_element_at",
+    "build:typescript": "esbuild src/* --bundle --outdir=dist --platform=node --target=node18 --format=esm",
+    "build": "pnpm run build:swift && pnpm run build:typescript"
   },
   "dependencies": {
     "jxa-run-compat": "^1.5.0",
-    "nano-spawn-compat": "^2.0.6"
+    "nano-spawn-compat": "^2.0.6",
+    "run-jxa": "^4.0.0"
   },
   "devDependencies": {
     "@jxa/global-type": "^1.4.0",
+    "chord-types": "^0.1.0",
     "esbuild": "^0.27.4",
     "llrt-types": "github:awslabs/llrt#path:/types",
-    "chord-types": "^0.1.0",
     "typescript": "^6.0.2"
   }
 }

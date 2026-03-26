@@ -119,47 +119,113 @@ var require_run = __commonJS({
 
 // src/menu.ts
 var import_jxa_run_compat = __toESM(require_run(), 1);
-function buildMenuHandler(_meta) {
-  return function menu(menuIndex) {
-    return (0, import_jxa_run_compat.run)((menuIndex2) => {
-      const log = (...args) => {
-        console.log("[JXA]", ...args);
-      };
-      const assertExists = (obj, label) => {
-        if (!obj) throw new Error(`Failed at: ${label}`);
-        log("OK:", label);
-        return obj;
-      };
-      if (!Number.isInteger(menuIndex2) || menuIndex2 < 0) {
-        throw new Error(`Expected menuIndex to be a non-negative integer, got: ${menuIndex2}`);
-      }
-      const se = Application("System Events");
-      const proc = assertExists(
-        se.processes.whose({ frontmost: true })[0],
-        "frontmost process"
-      );
-      log("Frontmost process:", proc.name());
-      const menuBar = assertExists(proc.menuBars[0], "menuBars[0]");
-      const items = menuBar.menuBarItems();
-      if (menuIndex2 >= items.length) {
-        throw new Error(
-          `menuIndex ${menuIndex2} out of range; found ${items.length} menu bar items (valid range: 0-${items.length - 1})`
-        );
-      }
-      const item = assertExists(items[menuIndex2], `menuBarItems[${menuIndex2}]`);
-      if (menuIndex2 === 0) {
-        log("Clicking Apple menu");
-      } else {
-        try {
-          log(`Clicking menu ${menuIndex2}: "${item.name()}"`);
-        } catch {
-          log(`Clicking menu ${menuIndex2}`);
+function buildMenuHandler(processName) {
+  function menu(first, ...rest) {
+    return (0, import_jxa_run_compat.run)(
+      (processNameArg, firstArg, restArgs) => {
+        const log = (...args) => {
+          console.log("[JXA]", ...args);
+        };
+        const normalize = (s) => s.replace(/[\u200B-\u200F\uFEFF\u202A-\u202E]/g, "").trim();
+        const assertExists = (obj, label) => {
+          if (!obj) throw new Error(`Failed at: ${label}`);
+          log("OK:", label);
+          return obj;
+        };
+        const findByName = (collection, target, label) => {
+          const normTarget = normalize(target);
+          const items2 = collection();
+          for (let i = 0; i < items2.length; i++) {
+            try {
+              const raw = items2[i].name();
+              const norm = normalize(raw);
+              if (norm === normTarget) {
+                log(`Matched ${label}:`, `"${raw}"`);
+                return items2[i];
+              }
+            } catch {
+            }
+          }
+          log(`Available ${label}s:`);
+          for (let i = 0; i < items2.length; i++) {
+            try {
+              log("-", `"${items2[i].name()}"`);
+            } catch {
+            }
+          }
+          throw new Error(`Missing: ${label} "${target}"`);
+        };
+        const se = Application("System Events");
+        if (processNameArg) {
+          const app = Application(processNameArg);
+          log("Activating app:", processNameArg);
+          app.activate();
+          delay(0.1);
         }
-      }
-      item.click();
-      log("Done");
-    }, menuIndex);
-  };
+        const proc = assertExists(
+          se.processes.whose({ frontmost: true })[0],
+          "frontmost process"
+        );
+        log("Frontmost process:", proc.name());
+        const menuBar = assertExists(proc.menuBars[0], "menuBars[0]");
+        const items = menuBar.menuBarItems();
+        if (typeof firstArg === "number") {
+          const menuIndex = firstArg;
+          if (!Number.isInteger(menuIndex) || menuIndex < 0) {
+            throw new Error(
+              `Expected menuIndex to be a non-negative integer, got: ${menuIndex}`
+            );
+          }
+          if (menuIndex >= items.length) {
+            throw new Error(
+              `menuIndex ${menuIndex} out of range; found ${items.length} menu bar items (valid range: 0-${items.length - 1})`
+            );
+          }
+          const item = assertExists(items[menuIndex], `menuBarItems[${menuIndex}]`);
+          if (menuIndex === 0) {
+            log("Clicking Apple menu");
+          } else {
+            try {
+              log(`Clicking menu ${menuIndex}: "${item.name()}"`);
+            } catch {
+              log(`Clicking menu ${menuIndex}`);
+            }
+          }
+          item.click();
+          log("Done");
+          return;
+        }
+        const menuItemsArg = [firstArg, ...restArgs];
+        if (menuItemsArg.length === 0) {
+          throw new Error("Expected at least one menu item name");
+        }
+        const [menuBarItem, ...menuItems] = menuItemsArg;
+        const menuBarItemRef = findByName(menuBar.menuBarItems, menuBarItem, "menuBarItem");
+        let current = menuBarItemRef;
+        for (let i = 0; i < menuItems.length; i++) {
+          const name = menuItems[i];
+          log(`Traversing -> "${name}"`);
+          const menu2 = assertExists(current.menus[0], `menus[0] for "${name}"`);
+          const next = findByName(menu2.menuItems, name, "menuItem");
+          if (i === menuItems.length - 1) {
+            log(`Clicking "${name}"`);
+            next.click();
+          } else {
+            current = next;
+          }
+        }
+        if (menuItems.length === 0) {
+          log(`Clicking top-level menu "${menuBarItem}"`);
+          menuBarItemRef.click();
+        }
+        log("Done");
+      },
+      processName,
+      first,
+      rest
+    );
+  }
+  return menu;
 }
 export {
   buildMenuHandler as default

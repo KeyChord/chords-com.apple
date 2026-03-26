@@ -1,4 +1,4 @@
-import buildMenuHandler from '../src/menu'
+import buildTrayHandler from '../src/tray'
 
-const menu = buildMenuHandler(import.meta);
-menu(10);
+const tray = buildTrayHandler();
+tray(10);
