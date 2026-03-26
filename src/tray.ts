@@ -6,100 +6,142 @@ declare global {
   const Ref: any
 }
 
-export default function buildTrayHandler(_meta: ImportMeta) {
+/**
+ * macOS doesn't expose an API for listing out the tray icons directly. Instead, we use the Accessibility API to "scan" through the tray icons.
+ */
+export default function buildTrayHandler() {
   return function tray(trayIndex: number) {
-    return run((trayIndexArg: number) => {
-      ObjC.import('ApplicationServices');
-      ObjC.import('CoreGraphics');
-
-      function getAttrRaw(el, attr) {
-        const ref = Ref();
-        const err = $.AXUIElementCopyAttributeValue(el, $(attr), ref);
-        if (err !== 0) return null;
-        return ref[0];
+    return run((trayIndex: number) => {
+      if (!Number.isInteger(trayIndex) || trayIndex < 1) {
+        throw new Error("trayIndex must be an integer >= 1");
       }
 
-      function cfToString(ref) {
-        if (!ref) return null;
-        try {
-          const obj = ObjC.castRefToObject(ref);
-          // NSString
-          if (obj.isKindOfClass($.NSString)) return obj.js;
-          // NSNumber, NSURL, etc — fall back to description
-          return obj.description.js;
-        } catch (e) {
-          return null;
-        }
+      function clickAt(x, y) {
+        const point = $.CGPointMake(x, y);
+
+        const mouseDown = $.CGEventCreateMouseEvent(
+          null,
+          $.kCGEventLeftMouseDown,
+          point,
+          $.kCGMouseButtonLeft
+        );
+
+        const mouseUp = $.CGEventCreateMouseEvent(
+          null,
+          $.kCGEventLeftMouseUp,
+          point,
+          $.kCGMouseButtonLeft
+        );
+
+        $.CGEventPost($.kCGHIDEventTap, mouseDown);
+        $.CGEventPost($.kCGHIDEventTap, mouseUp);
       }
-
-      function getAttr(el, attr) {
-        return cfToString(getAttrRaw(el, attr));
-      }
-
-      // ── cursor position ──────────────────────────────────────────────────────────
-      const event = $.CGEventCreate(null);
-      const loc   = $.CGEventGetLocation(event);
-      console.log(`Cursor: ${loc.x}, ${loc.y}`);
-
-      // top-right of the main display
-      const display = $.CGMainDisplayID();
-      const bounds = $.CGDisplayBounds(display);
 
       function getElementAtCoordinate(x, y) {
         const systemWide = $.AXUIElementCreateSystemWide();
         const elemRef = Ref();
-        const axErr = $.AXUIElementCopyElementAtPosition(systemWide, x, y, elemRef);
+        const err = $.AXUIElementCopyElementAtPosition(systemWide, x, y, elemRef);
 
-        console.log(`AXUIElementCopyElementAtPosition error: ${axErr}`);
-        // 0  = success
-        // -25211 = kAXErrorAPIDisabled  → need Accessibility permission
-        // -25212 = kAXErrorNotImplemented
-        // -25200 = kAXErrorInvalidUIElement
-
-        if (axErr !== 0) {
-          console.log('No element — check Accessibility + Screen Recording in System Settings > Privacy & Security');
-          $.exit(1);
-        }
-
-        let el = elemRef[0];
-        if (!el) {
-          console.log('elemRef[0] is null');
-          $.exit(1);
-        }
-
-        // ── walk up until we get something with a role ───────────────────────────────
-        for (let i = 0; i < 10; i++) {
-          const role = getAttr(el, 'AXRole');
-          if (role) break;
-
-          const parentRef = Ref();
-          const err = $.AXUIElementCopyAttributeValue(el, $('AXParent'), parentRef);
-          if (err !== 0 || !parentRef[0]) break;
-          el = parentRef[0];
-        }
-
-        return el;
+        console.log(`AXUIElementCopyElementAtPosition error: ${err}`);
+        if (err !== 0 || !elemRef[0]) return null;
+        return elemRef[0];
       }
 
-      const x = bounds.origin.x + bounds.size.width - 10;
-      const y = bounds.origin.y + 10;
-      const el = getElementAtCoordinate(x, y);
-      // ── click the element ────────────────────────────────────────────────────────
-      const mouseDown = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, loc, $.kCGMouseButtonLeft);
-      const mouseUp   = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp,   loc, $.kCGMouseButtonLeft);
-      $.CGEventPost($.kCGHIDEventTap, mouseDown);
-      $.CGEventPost($.kCGHIDEventTap, mouseUp);
-      console.log(`Clicked at ${loc.x}, ${loc.y}`);
+      function copyAttrRaw(el, attr) {
+        const ref = Ref();
+        const err = $.AXUIElementCopyAttributeValue(el, $(attr), ref);
+        if (err !== 0 || !ref[0]) return null;
+        return ref[0];
+      }
 
-      // ── dump result ──────────────────────────────────────────────────────────────
+      function cfTypeDescription(value) {
+        if (!value) return null;
+        try {
+          return ObjC.unwrap(ObjC.castRefToObject(value).description);
+        } catch (e) {
+          try {
+            return String(value);
+          } catch (e2) {
+            return null;
+          }
+        }
+      }
+
+      function getAttr(el, attr) {
+        return cfTypeDescription(copyAttrRaw(el, attr));
+      }
+
+      function getSize(el) {
+        const raw = copyAttrRaw(el, "AXSize");
+        if (!raw) return null;
+
+        const s = cfTypeDescription(raw);
+        if (!s) return null;
+
+        let m =
+          s.match(/w:\s*([-0-9.]+)\s*h:\s*([-0-9.]+)/i) ||
+          s.match(/\{\s*([-0-9.]+)\s*,\s*([-0-9.]+)\s*\}/) ||
+          s.match(/\{\s*\{\s*([-0-9.]+)\s*,\s*([-0-9.]+)\s*\}\s*\}/);
+
+        if (!m) {
+          return { width: null, height: null, raw: s };
+        }
+
+        return {
+          width: Number(m[1]),
+          height: Number(m[2]),
+          raw: s,
+        };
+      }
+
+      // ── find the trayIndex-th element from the right ───────────────────────────────
+      const display = $.CGMainDisplayID();
+      const bounds = $.CGDisplayBounds(display);
+
+      // start slightly inside the top-right corner
+      let x = bounds.origin.x + bounds.size.width - 6;
+      const y = bounds.origin.y + 12; // comfortably inside the menu bar
+
+      let el = null;
+      let size = null;
+
+      for (let i = 1; i <= trayIndex; i++) {
+        el = getElementAtCoordinate(x, y);
+        if (!el) {
+          throw new Error(`No accessibility element found at (${x}, ${y}) while looking for tray index ${trayIndex}`);
+        }
+
+        size = getSize(el);
+        if (!size || !size.width) {
+          throw new Error(`Could not determine width for tray element at step ${i}`);
+        }
+
+        console.log(
+          `step ${i}: x=${x}, role=${getAttr(el, "AXRole")}, desc=${getAttr(el, "AXDescription")}, width=${size.width}`
+        );
+
+        if (i < trayIndex) {
+          // move left by this element's width, plus a tiny padding
+          x -= Math.ceil(size.width) + 2;
+        }
+      }
+
+      // ── click final element ────────────────────────────────────────────────────────
+      clickAt(x, y);
+      console.log(`Clicked trayIndex ${trayIndex} at ${x}, ${y}`);
+
+      // ── dump result ────────────────────────────────────────────────────────────────
       const result = {
-        role:     getAttr(el, 'AXRole'),
-        subrole:  getAttr(el, 'AXSubrole'),
-        title:    getAttr(el, 'AXTitle'),
-        desc:     getAttr(el, 'AXDescription'),
-        value:    getAttr(el, 'AXValue'),
-        label:    getAttr(el, 'AXLabel'),
-        help:     getAttr(el, 'AXHelp'),
+        role:     getAttr(el, "AXRole"),
+        subrole:  getAttr(el, "AXSubrole"),
+        title:    getAttr(el, "AXTitle"),
+        desc:     getAttr(el, "AXDescription"),
+        value:    getAttr(el, "AXValue"),
+        label:    getAttr(el, "AXLabel"),
+        help:     getAttr(el, "AXHelp"),
+        width:    size ? size.width : null,
+        height:   size ? size.height : null,
+        axSize:   size ? size.raw : null,
       };
 
       console.log(JSON.stringify(result, null, 2));
