@@ -39,11 +39,11 @@ You can also use this Chord Package as a template for creating your own chords. 
 `b` Bottom
 
 `f` Front\
-`k` Back\
+`k` Back
 
 `[` Previous\
 `]` Next
 
-`g` = Go to\
-`q` = Quit (instead of `c` for close, reduces conflicts)\
+`g` Go to\
+`q` Quit (instead of `c` for close, reduces conflicts)\
 `,` Settings
