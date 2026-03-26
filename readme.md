@@ -4,10 +4,10 @@ These are the default chords that come bundled with Chord. If you're creating yo
 
 ## Global Keys
 
-`,` Chord Settings\
+`,` Universal Commands (`,<key>` usually maps to `cmd+<key>`)\
 `\` System Shortcuts / System Apps (e.g. Finder)\
 `/` Global Shortcuts / Global User-Installed Apps\
-`-` Menu Bar Items\
+`-` Menu Bar Items
 
 ## Directions
 

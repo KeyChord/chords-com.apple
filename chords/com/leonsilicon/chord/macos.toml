@@ -2,6 +2,9 @@
 name = "Chords"
 
 [chords]
-',s' = { name = "Settings" }
-',r' = { name = "Reload Config" }
-',q' = { name = "Quit Chord" }
+# A shortcut that likely won't conflict with any user-defined chords.
+'?\\' = { name = "Chords" }
+
+'\\s' = { name = "Settings" }
+'\\r' = { name = "Reload Config" }
+'\\q' = { name = "Quit Chord" }

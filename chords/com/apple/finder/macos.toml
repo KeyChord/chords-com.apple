@@ -2,8 +2,6 @@
 name = "Finder"
 
 [chords]
-'/f' = { name = "Finder", shell = "open -a Finder" }
-
 '?g' = { name = "Goto" }
 gr = { name = "Goto Recents", shortcut = "cmd+shift+f" }
 gx = { name = "Goto Docx", shortcut = "cmd+shift+o" }
@@ -23,10 +21,6 @@ gt = { name = "Goto Trash", shell = """
     open trash
   end tell
 """ }
-
-'?h' = { name = "History" }
-hb = { name = "History: Back", shortcut = "cmd+[" }
-hf = { name = "History: Forward", shortcut = "cmd+]" }
 
 '?d' = { name = "Directory" }
 du = { name = "Directory: Up", shortcut = "cmd+up" }
