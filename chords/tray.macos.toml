@@ -7,6 +7,7 @@ import buildTrayHandler from 'dist/tray.js';
 export default buildTrayHandler();
 '''
 
+[chords]
 '?=' = { name = "Tray" }
 # '=0' = { name = "Tray: Notch", 'args:notch' = [] }
 '=1' = { name = "Tray: 1st Item", args = [0] }

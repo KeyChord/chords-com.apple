@@ -7,6 +7,7 @@ import buildMenuHandler from 'dist/menu.js';
 export const buildMenuHandler();
 '''
 
+[chords]
 '?-' = { name = "Menu Bar" }
 '-0' = { name = "Menu Bar: Item 0 (Apple Icon)", args = [0] }
 '-1' = { name = "Menu Bar: Item 1", args = [1] }

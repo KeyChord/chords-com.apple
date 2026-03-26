@@ -7,6 +7,7 @@ import buildMenuHandler from 'dist/menu.js';
 export const menu = buildMenuHandler();
 '''
 
+[chords]
 '\q' = { name = "Force Quit", shortcut = "opt+cmd+esc" }
 '\ls' = { name = "Lock Screen", shortcut = "opt+cmd+esc" }
 '\lo' = { name = "Log Out", shortcut = "ctrl+cmd+q" }
