@@ -258,20 +258,31 @@ function buildTrayHandler() {
       }
       function clickAt(x2, y2) {
         const point = $.CGPointMake(x2, y2);
-        const mouseDown = $.CGEventCreateMouseEvent(
+        const isLeft = clickType2 === "left";
+        const button = isLeft ? $.kCGMouseButtonLeft : $.kCGMouseButtonRight;
+        const move = $.CGEventCreateMouseEvent(
           null,
-          $.kCGEventLeftMouseDown,
+          $.kCGEventMouseMoved,
           point,
-          clickType2 === "left" ? $.kCGMouseButtonLeft : $.kCGMouseButtonRight
+          button
         );
-        const mouseUp = $.CGEventCreateMouseEvent(
+        const down = $.CGEventCreateMouseEvent(
           null,
-          $.kCGEventLeftMouseUp,
+          isLeft ? $.kCGEventLeftMouseDown : $.kCGEventRightMouseDown,
           point,
-          clickType2 === "left" ? $.kCGMouseButtonLeft : $.kCGMouseButtonRight
+          button
         );
-        $.CGEventPost($.kCGHIDEventTap, mouseDown);
-        $.CGEventPost($.kCGHIDEventTap, mouseUp);
+        const up = $.CGEventCreateMouseEvent(
+          null,
+          isLeft ? $.kCGEventLeftMouseUp : $.kCGEventRightMouseUp,
+          point,
+          button
+        );
+        $.CGEventPost($.kCGHIDEventTap, move);
+        $.usleep(8e3);
+        $.CGEventPost($.kCGHIDEventTap, down);
+        $.usleep(25e3);
+        $.CGEventPost($.kCGHIDEventTap, up);
       }
       const width = getWidth(currentEl);
       if (width === null) {

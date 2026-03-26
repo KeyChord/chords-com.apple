@@ -201,23 +201,43 @@ export default function buildTrayHandler() {
 
       function clickAt(x: number, y: number) {
         const point = $.CGPointMake(x, y);
+        const isLeft = clickType === 'left';
 
-        const mouseDown = $.CGEventCreateMouseEvent(
+        const button = isLeft
+          ? $.kCGMouseButtonLeft
+          : $.kCGMouseButtonRight;
+
+        const move = $.CGEventCreateMouseEvent(
           null,
-          $.kCGEventLeftMouseDown,
+          $.kCGEventMouseMoved,
           point,
-          clickType === 'left' ? $.kCGMouseButtonLeft : $.kCGMouseButtonRight,
+          button
         );
 
-        const mouseUp = $.CGEventCreateMouseEvent(
+        const down = $.CGEventCreateMouseEvent(
           null,
-          $.kCGEventLeftMouseUp,
+          isLeft ? $.kCGEventLeftMouseDown : $.kCGEventRightMouseDown,
           point,
-          clickType === 'left' ? $.kCGMouseButtonLeft : $.kCGMouseButtonRight,
+          button
         );
 
-        $.CGEventPost($.kCGHIDEventTap, mouseDown);
-        $.CGEventPost($.kCGHIDEventTap, mouseUp);
+        const up = $.CGEventCreateMouseEvent(
+          null,
+          isLeft ? $.kCGEventLeftMouseUp : $.kCGEventRightMouseUp,
+          point,
+          button
+        );
+
+        // --- 1. Hover (critical for menu bar items) ---
+        $.CGEventPost($.kCGHIDEventTap, move);
+        $.usleep(8_000); // ~8ms
+
+        // --- 2. Mouse down ---
+        $.CGEventPost($.kCGHIDEventTap, down);
+        $.usleep(25_000); // ~25ms (key for reliability)
+
+        // --- 3. Mouse up ---
+        $.CGEventPost($.kCGHIDEventTap, up);
       }
 
       const width = getWidth(currentEl);

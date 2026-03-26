@@ -19,6 +19,8 @@ export default buildTrayHandler();
 '=7' = { name = "Tray: 7th Item", args = [6] }
 '=8' = { name = "Tray: 8th Item", args = [7] }
 '=9' = { name = "Tray: 9th Item", args = [8] }
+
+'?=-' = { name = "Tray: From End" }
 '=-1' = { name = "Tray: 1st End Item", args = [-1] }
 '=-2' = { name = "Tray: 2nd End Item", args = [-2] }
 '=-3' = { name = "Tray: 3rd End Item", args = [-3] }

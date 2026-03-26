@@ -8,6 +8,8 @@ export const menu = buildMenuHandler();
 '''
 
 [chords]
+'?\' = { name = "System Actions" }
+
 '\q' = { name = "Force Quit", shortcut = "opt+cmd+esc" }
 '\ls' = { name = "Lock Screen", shortcut = "opt+cmd+esc" }
 '\lo' = { name = "Log Out", shortcut = "ctrl+cmd+q" }
