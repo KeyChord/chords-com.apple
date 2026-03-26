@@ -2,12 +2,13 @@
 
 These are the default chords that come bundled with Chord. If you're creating your own chords, it's recommended to follow these guidelines:
 
-## Global Keys
+## Default Global Keys (can be overriden by apps)
 
 `,` Universal Commands (`,<key>` usually maps to `cmd+<key>`)\
 `\` System Shortcuts / System Apps (e.g. Finder)\
 `/` Global Shortcuts / Global User-Installed Apps\
-`-` Menu Bar Items
+`-` Menu Bar
+`=` Tray
 
 ## Directions
 

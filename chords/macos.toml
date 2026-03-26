@@ -1,6 +1,12 @@
 [config]
 name = "macOS"
 
+[config.js]
+module = '''
+import buildMenuHandler from 'dist/menu.js';
+export const menu = buildMenuHandler(import.meta);
+'''
+
 [chords]
 '?/' = { name = "Global Apps" }
 
@@ -40,3 +46,26 @@ name = "macOS"
 ',q' = { name = "Quit", shortcut = "cmd+q" }
 ',w' = { name = "Close", shortcut = "cmd+w" }
 ',,' = { name = "Settings", shortcut = "cmd+," }
+
+'?-' = { name = "Menu Bar" }
+'-0' = { name = "Menu Bar: Apple Icon", 'args:menu' = [0] }
+'-1' = { name = "Menu Bar: Item 1", 'args:menu' = [1] }
+'-2' = { name = "Menu Bar: Item 2", 'args:menu' = [2] }
+'-3' = { name = "Menu Bar: Item 3", 'args:menu' = [3] }
+'-4' = { name = "Menu Bar: Item 4", 'args:menu' = [4] }
+'-5' = { name = "Menu Bar: Item 5", 'args:menu' = [5] }
+'-6' = { name = "Menu Bar: Item 6", 'args:menu' = [6] }
+'-7' = { name = "Menu Bar: Item 7", 'args:menu' = [7] }
+'-8' = { name = "Menu Bar: Item 8", 'args:menu' = [8] }
+'-9' = { name = "Menu Bar: Item 9", 'args:menu' = [9] }
+
+'?=' = { name = "Tray" }
+'=1' = { name = "Tray: Item 1" }
+'=2' = { name = "Tray: Item 2" }
+'=3' = { name = "Tray: Item 3" }
+'=4' = { name = "Tray: Item 4" }
+'=5' = { name = "Tray: Item 5" }
+'=6' = { name = "Tray: Item 6" }
+'=7' = { name = "Tray: Item 7" }
+'=8' = { name = "Tray: Item 8" }
+'=9' = { name = "Tray: Item 9" }

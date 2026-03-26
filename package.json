@@ -11,7 +11,7 @@
     "pnpm": ">=9"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "esbuild src/* --bundle --outdir=dist --platform=node --target=node18 --format=esm"
   },
   "dependencies": {
     "jxa-run-compat": "^1.5.0",
@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@jxa/global-type": "^1.4.0",
+    "esbuild": "^0.27.4",
     "llrt-types": "github:awslabs/llrt#path:/types",
     "typescript": "^6.0.2"
   }
