@@ -5,12 +5,10 @@ name = "macOS Tray"
 module = '''
 import buildTrayHandler from 'dist/tray.js';
 export default buildTrayHandler();
-
-export const notch = () => {}
 '''
 
 '?=' = { name = "Tray" }
-'=0' = { name = "Tray: Notch", 'args:notch' = [] }
+# '=0' = { name = "Tray: Notch", 'args:notch' = [] }
 '=1' = { name = "Tray: 1st Item", args = [0] }
 '=2' = { name = "Tray: 2nd Item", args = [1] }
 '=3' = { name = "Tray: 3rd Item", args = [2] }

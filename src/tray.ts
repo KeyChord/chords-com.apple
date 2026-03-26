@@ -3,58 +3,32 @@ import { run } from "jxa-run-compat";
 
 declare global {
   // ObjC global
-  const Ref: any
+  const Ref: any;
 }
 
 /**
- * macOS doesn't expose an API for listing out the tray icons directly. Instead, we use the Accessibility API to "scan" through the tray icons.
+ * macOS doesn't expose an API for listing out the tray icons directly.
+ * Instead, we use the Accessibility API to "scan" through the tray icons.
  */
 export default function buildTrayHandler() {
-  return function tray(trayIndex: number) {
-    return run((trayIndex: number) => {
-      if (!Number.isInteger(trayIndex) || trayIndex < 1) {
-        throw new Error("trayIndex must be an integer >= 1");
-      }
+  return function tray(trayIndex: number, clickType: 'left' | 'right' = 'left') {
+    return run((trayIndex: number, clickType: 'left' | 'right') => {
+      ObjC.import("ApplicationServices");
+      ObjC.import("CoreGraphics");
 
-      function clickAt(x, y) {
-        const point = $.CGPointMake(x, y);
+      const RE_SIZE_NAMED = /w:\s*([-0-9.]+)\s*h:\s*([-0-9.]+)/i;
+      const RE_POINT_NAMED = /x:\s*([-0-9.]+)\s*y:\s*([-0-9.]+)/i;
+      const RE_BRACED_PAIR = /\{\s*([-0-9.]+)\s*,\s*([-0-9.]+)\s*\}/;
+      const RE_DOUBLE_BRACED_PAIR = /\{\s*\{\s*([-0-9.]+)\s*,\s*([-0-9.]+)\s*\}\s*\}/;
 
-        const mouseDown = $.CGEventCreateMouseEvent(
-          null,
-          $.kCGEventLeftMouseDown,
-          point,
-          $.kCGMouseButtonLeft
-        );
-
-        const mouseUp = $.CGEventCreateMouseEvent(
-          null,
-          $.kCGEventLeftMouseUp,
-          point,
-          $.kCGMouseButtonLeft
-        );
-
-        $.CGEventPost($.kCGHIDEventTap, mouseDown);
-        $.CGEventPost($.kCGHIDEventTap, mouseUp);
-      }
-
-      function getElementAtCoordinate(x, y) {
-        const systemWide = $.AXUIElementCreateSystemWide();
-        const elemRef = Ref();
-        const err = $.AXUIElementCopyElementAtPosition(systemWide, x, y, elemRef);
-
-        console.log(`AXUIElementCopyElementAtPosition error: ${err}`);
-        if (err !== 0 || !elemRef[0]) return null;
-        return elemRef[0];
-      }
-
-      function copyAttrRaw(el, attr) {
+      function copyAttrRaw(el: any, attr: string) {
         const ref = Ref();
         const err = $.AXUIElementCopyAttributeValue(el, $(attr), ref);
         if (err !== 0 || !ref[0]) return null;
         return ref[0];
       }
 
-      function cfTypeDescription(value) {
+      function cfTypeDescription(value: any) {
         if (!value) return null;
         try {
           return ObjC.unwrap(ObjC.castRefToObject(value).description);
@@ -67,84 +41,192 @@ export default function buildTrayHandler() {
         }
       }
 
-      function getAttr(el, attr) {
-        return cfTypeDescription(copyAttrRaw(el, attr));
+      function getAttr(el: any, attr: string) {
+        const raw = copyAttrRaw(el, attr);
+        return cfTypeDescription(raw);
       }
 
-      function getSize(el) {
+      function parsePair(
+        s: string,
+        namedRegexp: RegExp,
+      ): [number, number] | null {
+        let m =
+          s.match(namedRegexp) ||
+          s.match(RE_BRACED_PAIR) ||
+          s.match(RE_DOUBLE_BRACED_PAIR);
+
+        if (!m) return null;
+        return [Number(m[1]), Number(m[2])];
+      }
+
+      function getWidth(el: any) {
         const raw = copyAttrRaw(el, "AXSize");
         if (!raw) return null;
 
         const s = cfTypeDescription(raw);
         if (!s) return null;
 
-        let m =
-          s.match(/w:\s*([-0-9.]+)\s*h:\s*([-0-9.]+)/i) ||
-          s.match(/\{\s*([-0-9.]+)\s*,\s*([-0-9.]+)\s*\}/) ||
-          s.match(/\{\s*\{\s*([-0-9.]+)\s*,\s*([-0-9.]+)\s*\}\s*\}/);
+        const pair = parsePair(s, RE_SIZE_NAMED);
+        if (!pair) return null;
 
-        if (!m) {
-          return { width: null, height: null, raw: s };
-        }
-
-        return {
-          width: Number(m[1]),
-          height: Number(m[2]),
-          raw: s,
-        };
+        return pair[0];
       }
 
-      // ── find the trayIndex-th element from the right ───────────────────────────────
+      function getX(el: any) {
+        const raw = copyAttrRaw(el, "AXPosition");
+        if (!raw) return null;
+
+        const s = cfTypeDescription(raw);
+        if (!s) return null;
+
+        const pair = parsePair(s, RE_POINT_NAMED);
+        if (!pair) return null;
+
+        return pair[0];
+      }
+
       const display = $.CGMainDisplayID();
       const bounds = $.CGDisplayBounds(display);
 
-      // start slightly inside the top-right corner
-      let x = bounds.origin.x + bounds.size.width - 6;
-      const y = bounds.origin.y + 12; // comfortably inside the menu bar
+      function getElementAtCoordinate(x: number, y: number) {
+        const systemWide = $.AXUIElementCreateSystemWide();
+        const elemRef = Ref();
+        const axErr = $.AXUIElementCopyElementAtPosition(systemWide, x, y, elemRef);
 
-      let el = null;
-      let size = null;
+        if (axErr !== 0) {
+          return null;
+        }
 
-      for (let i = 1; i <= trayIndex; i++) {
-        el = getElementAtCoordinate(x, y);
+        const el = elemRef[0];
         if (!el) {
-          throw new Error(`No accessibility element found at (${x}, ${y}) while looking for tray index ${trayIndex}`);
+          return null;
         }
 
-        size = getSize(el);
-        if (!size || !size.width) {
-          throw new Error(`Could not determine width for tray element at step ${i}`);
+        return el;
+      }
+
+      function isMenuBar(el: any) {
+        return el && getAttr(el, "AXRole") === "AXMenuBar";
+      }
+
+      const minX = bounds.origin.x;
+      const maxX = bounds.origin.x + bounds.size.width;
+      const centerX = bounds.origin.x + bounds.size.width / 2;
+      const y = bounds.origin.y + 20;
+      const INCREMENT = 10;
+
+      const direction = trayIndex < 0 ? -1 : 1;
+      const steps = trayIndex < 0 ? Math.abs(trayIndex) - 1 : trayIndex;
+
+      function findStartElementFromLeft() {
+        // Binary search to find the first menu bar item rightward of center
+        let x = centerX;
+        for (let b = bounds.size.width / 4; b >= 1; b /= 2) {
+          while (isMenuBar(getElementAtCoordinate(x + b, y))) x += b;
         }
 
-        console.log(
-          `step ${i}: x=${x}, role=${getAttr(el, "AXRole")}, desc=${getAttr(el, "AXDescription")}, width=${size.width}`
-        );
+        x = x + 1;
 
-        if (i < trayIndex) {
-          // move left by this element's width, plus a tiny padding
-          x -= Math.ceil(size.width) + 2;
+        const el = getElementAtCoordinate(x, y);
+        if (!el || isMenuBar(el)) return null;
+
+        const elX = getX(el);
+        if (elX === null) return null;
+
+        return { el, x: elX };
+      }
+
+      function findStartElementFromRight() {
+        let x = maxX - INCREMENT;
+
+        while (x >= minX) {
+          const el = getElementAtCoordinate(x, y);
+
+          if (el !== null && !isMenuBar(el)) {
+            const elX = getX(el);
+            if (elX !== null) {
+              return { el, x: elX };
+            }
+          }
+
+          x -= INCREMENT;
+        }
+
+        return null;
+      }
+
+      const start =
+        direction === 1
+          ? findStartElementFromLeft()
+          : findStartElementFromRight();
+
+      if (!start) {
+        console.log(`Could not find starting tray item for trayIndex ${trayIndex}`);
+        return;
+      }
+
+      let currentEl = start.el;
+      let currentElX = start.x;
+      let x = currentElX;
+
+      for (let i = 0; i < steps; i++) {
+        while (true) {
+          x += direction * INCREMENT;
+
+          if (x > maxX || x < minX) {
+            console.log(
+              `Reached end of menu bar while looking for tray index ${trayIndex} (tried up to x=${x})`,
+            );
+            return;
+          }
+
+          const newEl = getElementAtCoordinate(x, y);
+
+          if (newEl === null || isMenuBar(newEl)) {
+            continue;
+          }
+
+          const newElX = getX(newEl);
+          if (newElX === null) {
+            continue;
+          }
+
+          if (newElX !== currentElX) {
+            currentEl = newEl;
+            currentElX = newElX;
+            break;
+          }
         }
       }
 
-      // ── click final element ────────────────────────────────────────────────────────
-      clickAt(x, y);
-      console.log(`Clicked trayIndex ${trayIndex} at ${x}, ${y}`);
+      function clickAt(x: number, y: number) {
+        const point = $.CGPointMake(x, y);
 
-      // ── dump result ────────────────────────────────────────────────────────────────
-      const result = {
-        role:     getAttr(el, "AXRole"),
-        subrole:  getAttr(el, "AXSubrole"),
-        title:    getAttr(el, "AXTitle"),
-        desc:     getAttr(el, "AXDescription"),
-        value:    getAttr(el, "AXValue"),
-        label:    getAttr(el, "AXLabel"),
-        help:     getAttr(el, "AXHelp"),
-        width:    size ? size.width : null,
-        height:   size ? size.height : null,
-        axSize:   size ? size.raw : null,
-      };
+        const mouseDown = $.CGEventCreateMouseEvent(
+          null,
+          $.kCGEventLeftMouseDown,
+          point,
+          clickType === 'left' ? $.kCGMouseButtonLeft : $.kCGMouseButtonRight,
+        );
 
-      console.log(JSON.stringify(result, null, 2));
-    }, trayIndex);
+        const mouseUp = $.CGEventCreateMouseEvent(
+          null,
+          $.kCGEventLeftMouseUp,
+          point,
+          clickType === 'left' ? $.kCGMouseButtonLeft : $.kCGMouseButtonRight,
+        );
+
+        $.CGEventPost($.kCGHIDEventTap, mouseDown);
+        $.CGEventPost($.kCGHIDEventTap, mouseUp);
+      }
+
+      const width = getWidth(currentEl);
+      if (width === null) {
+        console.log(`Could not determine width for tray index ${trayIndex}`);
+        return;
+      }
+
+      clickAt(currentElX + width / 2, y);
+    }, trayIndex, clickType);
   };
 }
