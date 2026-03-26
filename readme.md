@@ -4,6 +4,8 @@ These are the default chords that come bundled with Chord. In addition to system
 
 - [Finder](./chords/com/apple/finder/macos.toml) (`com.apple.finder`)
 - [Safari](./chords/com/apple/safari/macos.toml) (`com.apple.safari`)
+- [Terminal](./chords/com/apple/Terminal/macos.toml) (`com.apple.Terminal`)
+- [Activity Monitor](./chords/com/apple/ActivityMonitor/macos.toml) (`com.apple.ActivityMonitor`)
 
 You can also use this Chord Package as a template for creating your own chords. See [development.md](./development.md) for detailed instructions. When defining your own chords, it's recommended to follow the conventions below.
 
