@@ -11,9 +11,8 @@
     "pnpm": ">=9"
   },
   "scripts": {
-    "build:swift": "swiftc swift/ax_element_at.swift -o dist/bin/ax_element_at",
     "build:typescript": "esbuild src/* --bundle --outdir=dist --platform=node --target=node18 --format=esm",
-    "build": "pnpm run build:swift && pnpm run build:typescript"
+    "build": "pnpm run build:typescript"
   },
   "dependencies": {
     "jxa-run-compat": "^1.5.0",

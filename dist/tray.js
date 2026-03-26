@@ -119,156 +119,167 @@ var require_run = __commonJS({
 
 // src/tray.ts
 var import_jxa_run_compat = __toESM(require_run(), 1);
-function buildTrayHandler(_meta) {
-  return function tray(trayIndex) {
-    return (0, import_jxa_run_compat.run)((trayIndexArg) => {
-      const normalize = (s) => String(s).replace(/[\u200B-\u200F\uFEFF\u202A-\u202E]/g, "").trim();
-      const normKey = (s) => normalize(s).toLowerCase().replace(/[^a-z0-9]+/g, "");
-      const getLabel = (item) => {
+function buildTrayHandler() {
+  return function tray(trayIndex, clickType = "left") {
+    return (0, import_jxa_run_compat.run)((trayIndex2, clickType2) => {
+      ObjC.import("ApplicationServices");
+      ObjC.import("CoreGraphics");
+      const RE_SIZE_NAMED = /w:\s*([-0-9.]+)\s*h:\s*([-0-9.]+)/i;
+      const RE_POINT_NAMED = /x:\s*([-0-9.]+)\s*y:\s*([-0-9.]+)/i;
+      const RE_BRACED_PAIR = /\{\s*([-0-9.]+)\s*,\s*([-0-9.]+)\s*\}/;
+      const RE_DOUBLE_BRACED_PAIR = /\{\s*\{\s*([-0-9.]+)\s*,\s*([-0-9.]+)\s*\}\s*\}/;
+      function copyAttrRaw(el, attr) {
+        const ref = Ref();
+        const err = $.AXUIElementCopyAttributeValue(el, $(attr), ref);
+        if (err !== 0 || !ref[0]) return null;
+        return ref[0];
+      }
+      function cfTypeDescription(value) {
+        if (!value) return null;
         try {
-          const desc = item.description();
-          if (desc) return normalize(desc);
-        } catch {
-        }
-        try {
-          const title = item.title();
-          if (title) return normalize(title);
-        } catch {
-        }
-        try {
-          const name = item.name();
-          if (name) return normalize(name);
-        } catch {
-        }
-        return "status menu";
-      };
-      const getPosition = (item) => {
-        try {
-          const p = item.position();
-          if (p && p.length >= 2) {
-            return { x: Number(p[0]), y: Number(p[1]) };
+          return ObjC.unwrap(ObjC.castRefToObject(value).description);
+        } catch (e) {
+          try {
+            return String(value);
+          } catch (e2) {
+            return null;
           }
-        } catch {
         }
-        try {
-          const p = item.attributes.byName("AXPosition").value();
-          if (p && p.length >= 2) {
-            return { x: Number(p[0]), y: Number(p[1]) };
+      }
+      function getAttr(el, attr) {
+        const raw = copyAttrRaw(el, attr);
+        return cfTypeDescription(raw);
+      }
+      function parsePair(s, namedRegexp) {
+        let m = s.match(namedRegexp) || s.match(RE_BRACED_PAIR) || s.match(RE_DOUBLE_BRACED_PAIR);
+        if (!m) return null;
+        return [Number(m[1]), Number(m[2])];
+      }
+      function getWidth(el) {
+        const raw = copyAttrRaw(el, "AXSize");
+        if (!raw) return null;
+        const s = cfTypeDescription(raw);
+        if (!s) return null;
+        const pair = parsePair(s, RE_SIZE_NAMED);
+        if (!pair) return null;
+        return pair[0];
+      }
+      function getX(el) {
+        const raw = copyAttrRaw(el, "AXPosition");
+        if (!raw) return null;
+        const s = cfTypeDescription(raw);
+        if (!s) return null;
+        const pair = parsePair(s, RE_POINT_NAMED);
+        if (!pair) return null;
+        return pair[0];
+      }
+      const display = $.CGMainDisplayID();
+      const bounds = $.CGDisplayBounds(display);
+      function getElementAtCoordinate(x2, y2) {
+        const systemWide = $.AXUIElementCreateSystemWide();
+        const elemRef = Ref();
+        const axErr = $.AXUIElementCopyElementAtPosition(systemWide, x2, y2, elemRef);
+        if (axErr !== 0) {
+          return null;
+        }
+        const el = elemRef[0];
+        if (!el) {
+          return null;
+        }
+        return el;
+      }
+      function isMenuBar(el) {
+        return el && getAttr(el, "AXRole") === "AXMenuBar";
+      }
+      const minX = bounds.origin.x;
+      const maxX = bounds.origin.x + bounds.size.width;
+      const centerX = bounds.origin.x + bounds.size.width / 2;
+      const y = bounds.origin.y + 20;
+      const INCREMENT = 10;
+      const direction = trayIndex2 < 0 ? -1 : 1;
+      const steps = trayIndex2 < 0 ? Math.abs(trayIndex2) - 1 : trayIndex2;
+      function findStartElementFromLeft() {
+        let x2 = centerX;
+        for (let b = bounds.size.width / 4; b >= 1; b /= 2) {
+          while (isMenuBar(getElementAtCoordinate(x2 + b, y))) x2 += b;
+        }
+        x2 = x2 + 1;
+        const el = getElementAtCoordinate(x2, y);
+        if (!el || isMenuBar(el)) return null;
+        const elX = getX(el);
+        if (elX === null) return null;
+        return { el, x: elX };
+      }
+      function findStartElementFromRight() {
+        let x2 = maxX - INCREMENT;
+        while (x2 >= minX) {
+          const el = getElementAtCoordinate(x2, y);
+          if (el !== null && !isMenuBar(el)) {
+            const elX = getX(el);
+            if (elX !== null) {
+              return { el, x: elX };
+            }
           }
-        } catch {
+          x2 -= INCREMENT;
         }
-        return { x: Number.POSITIVE_INFINITY, y: Number.POSITIVE_INFINITY };
-      };
-      const genericMenuLabels = /* @__PURE__ */ new Set([
-        "apple",
-        "file",
-        "edit",
-        "view",
-        "window",
-        "help",
-        "format"
-      ]);
-      if (!Number.isInteger(trayIndexArg) || trayIndexArg < 1) {
-        throw new Error(
-          `Expected trayIndex to be a positive integer, got: ${trayIndexArg}`
+        return null;
+      }
+      const start = direction === 1 ? findStartElementFromLeft() : findStartElementFromRight();
+      if (!start) {
+        console.log(`Could not find starting tray item for trayIndex ${trayIndex2}`);
+        return;
+      }
+      let currentEl = start.el;
+      let currentElX = start.x;
+      let x = currentElX;
+      for (let i = 0; i < steps; i++) {
+        while (true) {
+          x += direction * INCREMENT;
+          if (x > maxX || x < minX) {
+            console.log(
+              `Reached end of menu bar while looking for tray index ${trayIndex2} (tried up to x=${x})`
+            );
+            return;
+          }
+          const newEl = getElementAtCoordinate(x, y);
+          if (newEl === null || isMenuBar(newEl)) {
+            continue;
+          }
+          const newElX = getX(newEl);
+          if (newElX === null) {
+            continue;
+          }
+          if (newElX !== currentElX) {
+            currentEl = newEl;
+            currentElX = newElX;
+            break;
+          }
+        }
+      }
+      function clickAt(x2, y2) {
+        const point = $.CGPointMake(x2, y2);
+        const mouseDown = $.CGEventCreateMouseEvent(
+          null,
+          $.kCGEventLeftMouseDown,
+          point,
+          clickType2 === "left" ? $.kCGMouseButtonLeft : $.kCGMouseButtonRight
         );
-      }
-      const se = Application("System Events");
-      const rows = [];
-      const seen = /* @__PURE__ */ Object.create(null);
-      const addFromBar = (proc, procName, barIndex, include) => {
-        let items;
-        try {
-          items = proc.menuBars[barIndex - 1].menuBarItems();
-        } catch {
-          return;
-        }
-        for (let i = 0; i < items.length; i++) {
-          const item = items[i];
-          const label = getLabel(item);
-          if (!include(label)) continue;
-          const pos = getPosition(item);
-          const key = [
-            normKey(procName),
-            barIndex,
-            i + 1,
-            normKey(label)
-          ].join("|");
-          if (seen[key]) continue;
-          seen[key] = true;
-          rows.push({
-            ref: item,
-            owner: procName,
-            barIndex,
-            itemIndex: i + 1,
-            label,
-            x: pos.x,
-            y: pos.y
-          });
-        }
-      };
-      const procs = se.processes();
-      for (let i = 0; i < procs.length; i++) {
-        let procName = "";
-        try {
-          procName = String(procs[i].name());
-        } catch {
-          continue;
-        }
-        if (!procName) continue;
-        addFromBar(procs[i], procName, 2, () => true);
-      }
-      const specialHosts = ["Control Center", "ControlCenter", "SystemUIServer"];
-      for (let i = 0; i < specialHosts.length; i++) {
-        const name = specialHosts[i];
-        let proc;
-        try {
-          proc = se.processes.byName(name);
-          proc.name();
-        } catch {
-          continue;
-        }
-        addFromBar(proc, name, 1, (label) => {
-          const key = normKey(label);
-          if (!key) return false;
-          if (genericMenuLabels.has(key)) return false;
-          if (key === normKey(name)) return false;
-          return true;
-        });
-      }
-      if (rows.length === 0) {
-        throw new Error("No tray items were exposed via Accessibility");
-      }
-      rows.sort((a, b) => {
-        const ax = Number.isFinite(a.x) ? a.x : Number.MAX_SAFE_INTEGER;
-        const bx = Number.isFinite(b.x) ? b.x : Number.MAX_SAFE_INTEGER;
-        if (ax !== bx) return ax - bx;
-        if (a.y !== b.y) return a.y - b.y;
-        if (a.owner !== b.owner) return a.owner < b.owner ? -1 : 1;
-        if (a.barIndex !== b.barIndex) return a.barIndex - b.barIndex;
-        return a.itemIndex - b.itemIndex;
-      });
-      if (trayIndexArg > rows.length) {
-        const available = rows.map((row, i) => `${i + 1}: ${row.label} [${row.owner}]`).join("\n");
-        throw new Error(
-          `trayIndex ${trayIndexArg} out of range; found ${rows.length} tray item(s)
-${available}`
+        const mouseUp = $.CGEventCreateMouseEvent(
+          null,
+          $.kCGEventLeftMouseUp,
+          point,
+          clickType2 === "left" ? $.kCGMouseButtonLeft : $.kCGMouseButtonRight
         );
+        $.CGEventPost($.kCGHIDEventTap, mouseDown);
+        $.CGEventPost($.kCGHIDEventTap, mouseUp);
       }
-      const target = rows[trayIndexArg - 1];
-      try {
-        target.ref.click();
-      } catch {
-        try {
-          target.ref.actions.byName("AXPress").perform();
-        } catch (err) {
-          throw new Error(
-            `Failed to click tray item ${trayIndexArg} (${target.label} [${target.owner}]): ${String(err)}`
-          );
-        }
+      const width = getWidth(currentEl);
+      if (width === null) {
+        console.log(`Could not determine width for tray index ${trayIndex2}`);
+        return;
       }
-      return `${trayIndexArg}: ${target.label} [${target.owner}]`;
-    }, trayIndex);
+      clickAt(currentElX + width / 2, y);
+    }, trayIndex, clickType);
   };
 }
 export {
