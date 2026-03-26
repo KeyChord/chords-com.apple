@@ -18,6 +18,9 @@ importers:
       '@jxa/global-type':
         specifier: ^1.4.0
         version: 1.4.0
+      chord-types:
+        specifier: ^0.1.0
+        version: 0.1.0
       esbuild:
         specifier: ^0.27.4
         version: 0.27.4
@@ -196,6 +199,9 @@ packages:
     resolution: {integrity: sha512-Bq3SmSpyFHaWjPk8If9yc6svM8c56dB5BAtW4Qbw5jHTwwXXcTLoRMkpDJp6VL0XzlWaCHTXrkFURMYmD0sLqg==}
     engines: {node: '>=12'}
 
+  chord-types@0.1.0:
+    resolution: {integrity: sha512-M3DtcJgOE7h7JEPtNFHXX6fZ3YNrAUEUtcT4IOHpdKrVCeFbVk6OO6U/zTm09vz7Rzfw2DHWwhaNpywdtY0owA==}
+
   esbuild@0.27.4:
     resolution: {integrity: sha512-Rq4vbHnYkK5fws5NF7MYTU68FPRE1ajX7heQ/8QXXWqNgqqJ/GkmmyxIzUnf2Sr/bakf8l54716CcMGHYhMrrQ==}
     engines: {node: '>=18'}
@@ -308,6 +314,8 @@ snapshots:
   '@jxa/types@1.4.0': {}
 
   ansi-regex@6.2.2: {}
+
+  chord-types@0.1.0: {}
 
   esbuild@0.27.4:
     optionalDependencies:

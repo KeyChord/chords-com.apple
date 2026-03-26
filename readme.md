@@ -9,6 +9,7 @@ These are the default chords that come bundled with Chord. If you're creating yo
 `/` Global Shortcuts / Global User-Installed Apps\
 `-` Menu Bar
 `=` Tray
+`[` Window Management
 
 ## Directions
 
@@ -20,17 +21,18 @@ These are the default chords that come bundled with Chord. If you're creating yo
 `n` North / New\
 `e` East / End\
 `s` South / Start\
-`w` West
+`w` West / Forward\
 
 > We typically assign the cardinal directions to distinguish between actions with a "move" equivalent. For example, "move pane left" would typically be assigned `pl` (pane left) while "focus pane left" would be assigned `pw` (pane west).
 
 `t` Top\
 `m` Middle\
 `c` Center\
-`g` Ground (Bottom)
+`b` Bottom
 
-`b` Back\
-`f` Forward\
+`f` Front\
+`k` Back\
+
 `[` Previous\
 `]` Next
 

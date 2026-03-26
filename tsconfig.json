@@ -1,21 +1,13 @@
 {
   "compilerOptions": {
-    "lib": ["ESNext"],
-    "target": "ESNext",
     "module": "nodenext",
-    "outDir": "./dist",
+    "moduleResolution": "nodenext",
     "rootDir": "./src",
-    "moduleDetection": "force",
-    "allowJs": true,
-    "types": ["llrt-types"],
+    "outDir": "./dist",
+    "types": ["chord-types", "llrt-types"],
     "paths": {
       "#/*": ["./src/*"]
     },
-    "moduleResolution": "nodenext",
-    "strict": true,
-    "skipLibCheck": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
-  }
+  },
+  "include": ["src"]
 }

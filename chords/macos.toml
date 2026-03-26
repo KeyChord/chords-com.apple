@@ -26,8 +26,39 @@ export const menu = buildMenuHandler(import.meta);
 '\vd' = { name = "Volume Down", shortcut = "AudioVolumeDown" }
 '\vm' = { name = "Volume Mute", shortcut = "AudioVolumeMute" }
 
+# Built-in macOS window management shortcuts
+# Can be overriden if using a dedicated window manager such as yabai, Aerospace, etc.
+'?[' = { name = "Window Management" }
+
+# Move and Resize
+'[l' = { name = "Left", shortcut = "ctrl+fn+left" }
+'[r' = { name = "Right", shortcut = "ctrl+fn+right" }
+'[t' = { name = "Top", shortcut = "ctrl+fn+up" }
+'[b' = { name = "Bottom", shortcut = "ctrl+fn+down" }
+'[tl' = { name = "Top Left", 'args:menu' = ["Window", "Move & Resize", "Top Left"] }
+'[tr' = { name = "Top Right", 'args:menu' = ["Window", "Move & Resize", "Top Right"] }
+'[bl' = { name = "Bottom Left", 'args:menu' = ["Window", "Move & Resize", "Bottom Left"] }
+'[br' = { name = "Bottom Right", 'args:menu' = ["Window", "Move & Resize", "Bottom Right"] }
+'[lr' = { name = "Left Right", shortcut = "ctrl+fn+shift+left" }
+'[rl' = { name = "Right Left", shortcut = "ctrl+fn+shift+right" }
+'[tb' = { name = "Top Bottom", shortcut = "ctrl+fn+shift+up" }
+'[bt' = { name = "Bottom Top", shortcut = "ctrl+fn+shift+down" }
+'[q' = { name = "Quarters", 'args:menu' = ["Window", "Move & Resize", "Quarters"] }
+'[s[' = { name = "Size: Previous", shortcut = "ctrl+fn+r" }
+
+'[m' = { name = "Minimize", shortcut = "cmd+m" }
+'[z' = { name = "Zoom", 'args:menu' = ["Window", 'Zoom'] }
+'[f' = { name = "Fill", shortcut = "ctrl+fn+f" }
+'[c' = { name = "Center", shortcut = "ctrl+fn+c" }
+'[fl' = { name = "Fullscreen Left", 'args:menu' = ["Window", "Full Screen Tile", "Left of Screen"] }
+'[fr' = { name = "Fullscreen Right", 'args:menu' = ["Window", "Full Screen Tile", "Right of Screen"] }
+'[a' = { name = "All to Front", 'args:menu' = ["Window", "Bring All to Front"] }
+'[[' = { name = "Previous Window" }
+'[]' = { name = "Next Window" }
+
 # Comma because `Comma`nd
 # The comma is a special "global key" because it can be overriden by apps (for example, if an app uses cmd+shift+z instead of cmd+y for undo).
+# We define these "universal shortcuts" so that we don't need to redefine them in every app.
 '?,' = { name = "Universal Commands" }
 ',a' = { name = "Select All", shortcut = "cmd+a" }
 ',s' = { name = "Save", shortcut = "cmd+s" }
@@ -46,6 +77,8 @@ export const menu = buildMenuHandler(import.meta);
 ',q' = { name = "Quit", shortcut = "cmd+q" }
 ',w' = { name = "Close", shortcut = "cmd+w" }
 ',,' = { name = "Settings", shortcut = "cmd+," }
+',=' = { name = "Zoom In", shortcut = "cmd+=" }
+',-' = { name = "Zoom Out", shortcut = "cmd+-" }
 
 '?-' = { name = "Menu Bar" }
 '-0' = { name = "Menu Bar: Apple Icon", 'args:menu' = [0] }
