@@ -4,7 +4,7 @@ name = "macOS Menu Bar"
 [config.js]
 module = '''
 import buildMenuHandler from 'dist/menu.js';
-export const buildMenuHandler();
+export default buildMenuHandler();
 '''
 
 [chords]
