@@ -256,40 +256,85 @@ function buildTrayHandler() {
           }
         }
       }
-      function clickAt(x2, y2) {
+      function clickAt(x2, y2, clickType3 = "left") {
         const point = $.CGPointMake(x2, y2);
-        const isLeft = clickType2 === "left";
+        const isLeft = clickType3 === "left";
         const button = isLeft ? $.kCGMouseButtonLeft : $.kCGMouseButtonRight;
+        const downType = isLeft ? $.kCGEventLeftMouseDown : $.kCGEventRightMouseDown;
+        const upType = isLeft ? $.kCGEventLeftMouseUp : $.kCGEventRightMouseUp;
+        $.CGWarpMouseCursorPosition(point);
+        delay(0.02);
         const move = $.CGEventCreateMouseEvent(
           null,
           $.kCGEventMouseMoved,
           point,
           button
         );
+        $.CGEventPost($.kCGHIDEventTap, move);
+        delay(0.03);
         const down = $.CGEventCreateMouseEvent(
           null,
-          isLeft ? $.kCGEventLeftMouseDown : $.kCGEventRightMouseDown,
+          downType,
           point,
           button
         );
         const up = $.CGEventCreateMouseEvent(
           null,
-          isLeft ? $.kCGEventLeftMouseUp : $.kCGEventRightMouseUp,
+          upType,
           point,
           button
         );
-        $.CGEventPost($.kCGHIDEventTap, move);
-        $.usleep(8e3);
         $.CGEventPost($.kCGHIDEventTap, down);
-        $.usleep(25e3);
+        delay(0.06);
         $.CGEventPost($.kCGHIDEventTap, up);
       }
-      const width = getWidth(currentEl);
-      if (width === null) {
-        console.log(`Could not determine width for tray index ${trayIndex2}`);
-        return;
+      function copyActionNames(el) {
+        const ref = Ref();
+        const err = $.AXUIElementCopyActionNames(el, ref);
+        if (err !== 0 || !ref[0]) return [];
+        const arr = ref[0];
+        const count = $.CFArrayGetCount(arr);
+        const out = [];
+        for (let i = 0; i < count; i++) {
+          const raw = $.CFArrayGetValueAtIndex(arr, i);
+          try {
+            out.push(ObjC.unwrap(ObjC.castRefToObject(raw)));
+          } catch (e) {
+            try {
+              out.push(String(raw));
+            } catch (e2) {
+            }
+          }
+        }
+        return out;
       }
-      clickAt(currentElX + width / 2, y);
+      function hasAction(el, actionName) {
+        return copyActionNames(el).some((a) => a === actionName);
+      }
+      function performPress(el) {
+        return $.AXUIElementPerformAction(el, $("AXPress"));
+      }
+      function activateTrayElement(el, elX, y2, clickType3) {
+        if (clickType3 === "left" && hasAction(el, "AXPress")) {
+          const pressErr = performPress(el);
+          console.log("AXPress:", pressErr);
+          if (pressErr === 0) {
+            return;
+          }
+          console.log("AXPress failed, falling back to cursor click");
+        } else if (clickType3 === "left") {
+          console.log("AXPress not available, falling back to cursor click");
+        } else {
+          console.log("Right click requested, using cursor click");
+        }
+        const width = getWidth(el);
+        if (width === null) {
+          console.log(`Could not determine width for fallback click at x=${elX}`);
+          return;
+        }
+        clickAt(elX + width / 2, y2, clickType3);
+      }
+      activateTrayElement(currentEl, currentElX, y, clickType2);
     }, trayIndex, clickType);
   };
 }

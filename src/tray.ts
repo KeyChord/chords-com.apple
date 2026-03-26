@@ -199,54 +199,119 @@ export default function buildTrayHandler() {
         }
       }
 
-      function clickAt(x: number, y: number) {
+      function clickAt(x: number, y: number, clickType: "left" | "right" = "left") {
         const point = $.CGPointMake(x, y);
-        const isLeft = clickType === 'left';
+        const isLeft = clickType === "left";
 
         const button = isLeft
           ? $.kCGMouseButtonLeft
           : $.kCGMouseButtonRight;
 
+        const downType = isLeft
+          ? $.kCGEventLeftMouseDown
+          : $.kCGEventRightMouseDown;
+
+        const upType = isLeft
+          ? $.kCGEventLeftMouseUp
+          : $.kCGEventRightMouseUp;
+
+        $.CGWarpMouseCursorPosition(point);
+        delay(0.02);
+
         const move = $.CGEventCreateMouseEvent(
           null,
           $.kCGEventMouseMoved,
           point,
-          button
+          button,
         );
+        $.CGEventPost($.kCGHIDEventTap, move);
+
+        delay(0.03);
 
         const down = $.CGEventCreateMouseEvent(
           null,
-          isLeft ? $.kCGEventLeftMouseDown : $.kCGEventRightMouseDown,
+          downType,
           point,
-          button
+          button,
         );
 
         const up = $.CGEventCreateMouseEvent(
           null,
-          isLeft ? $.kCGEventLeftMouseUp : $.kCGEventRightMouseUp,
+          upType,
           point,
-          button
+          button,
         );
 
-        // --- 1. Hover (critical for menu bar items) ---
-        $.CGEventPost($.kCGHIDEventTap, move);
-        $.usleep(8_000); // ~8ms
-
-        // --- 2. Mouse down ---
         $.CGEventPost($.kCGHIDEventTap, down);
-        $.usleep(25_000); // ~25ms (key for reliability)
-
-        // --- 3. Mouse up ---
+        delay(0.06);
         $.CGEventPost($.kCGHIDEventTap, up);
       }
 
-      const width = getWidth(currentEl);
-      if (width === null) {
-        console.log(`Could not determine width for tray index ${trayIndex}`);
-        return;
+      function copyActionNames(el: any): string[] {
+        const ref = Ref();
+        const err = $.AXUIElementCopyActionNames(el, ref);
+        if (err !== 0 || !ref[0]) return [];
+
+        const arr = ref[0];
+        const count = $.CFArrayGetCount(arr);
+        const out: string[] = [];
+
+        for (let i = 0; i < count; i++) {
+          const raw = $.CFArrayGetValueAtIndex(arr, i);
+
+          try {
+            out.push(ObjC.unwrap(ObjC.castRefToObject(raw)));
+          } catch (e) {
+            try {
+              out.push(String(raw));
+            } catch (e2) {
+              // ignore unparseable action names
+            }
+          }
+        }
+
+        return out;
       }
 
-      clickAt(currentElX + width / 2, y);
+      function hasAction(el: any, actionName: string) {
+        return copyActionNames(el).some((a) => a === actionName);
+      }
+
+      function performPress(el: any) {
+        return $.AXUIElementPerformAction(el, $("AXPress"));
+      }
+
+      function activateTrayElement(
+        el: any,
+        elX: number,
+        y: number,
+        clickType: "left" | "right",
+      ) {
+        if (clickType === "left" && hasAction(el, "AXPress")) {
+          const pressErr = performPress(el);
+          console.log("AXPress:", pressErr);
+
+          if (pressErr === 0) {
+            return;
+          }
+
+          console.log("AXPress failed, falling back to cursor click");
+        } else if (clickType === "left") {
+          console.log("AXPress not available, falling back to cursor click");
+        } else {
+          console.log("Right click requested, using cursor click");
+        }
+
+        const width = getWidth(el);
+        if (width === null) {
+          console.log(`Could not determine width for fallback click at x=${elX}`);
+          return;
+        }
+
+        clickAt(elX + width / 2, y, clickType);
+      }
+
+      activateTrayElement(currentEl, currentElX, y, clickType);
     }, trayIndex, clickType);
   };
 }

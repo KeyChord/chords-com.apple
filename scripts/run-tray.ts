@@ -1,9 +1,4 @@
-import buildTrayHandler from '../src/tray'
+import buildTrayHandler from "../src/tray.js";
 
-const tray = buildTrayHandler();
-tray(-2);
-// tray(2);
-// tray(3);
-// tray(4);
-// tray(5);
-// tray(6);
+const tray = buildTrayHandler()
+await tray(0)
