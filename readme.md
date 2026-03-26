@@ -1,14 +1,19 @@
-# Chords
+# Chord's Default Chords
 
-These are the default chords that come bundled with Chord. If you're creating your own chords, it's recommended to follow these guidelines:
+These are the default chords that come bundled with Chord. In addition to system-wide macOS chords, they also contain chords for the following pre-installed macOS apps:
+
+- [Finder](./chords/com/apple/finder/macos.toml) (`com.apple.finder`)
+- [Safari](./chords/com/apple/safari/macos.toml) (`com.apple.safari`)
+
+You can also use this Chord Package as a template for creating your own chords. See [development.md](./development.md) for detailed instructions. When defining your own chords, it's recommended to follow the conventions below.
 
 ## Default Global Keys (can be overriden by apps)
 
-`,` Universal Commands (`,<key>` usually maps to `cmd+<key>`)\
-`\` System Shortcuts / System Apps (e.g. Finder)\
-`/` Global Shortcuts / Global User-Installed Apps\
-`-` Menu Bar
-`=` Tray
+`,` Universal Commands (`,<key>` maps to `cmd+<key>`)\
+`\` System Shortcuts\
+`/` Global Shortcuts / Applications\
+`-` Menu Bar\
+`=` Tray\
 `[` Window Management
 
 ## Directions
@@ -39,7 +44,3 @@ These are the default chords that come bundled with Chord. If you're creating yo
 `g` = Go to\
 `q` = Quit (instead of `c` for close, reduces conflicts)\
 `,` Settings
-
-## Creating your own Chord Package
-
-Clone this repo!

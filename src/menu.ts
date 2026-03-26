@@ -1,61 +1,145 @@
 import "@jxa/global-type";
 import { run } from "jxa-run-compat";
 
-export default function buildMenuHandler(_meta: ImportMeta) {
-  return function menu(menuIndex: number) {
-    return run((menuIndex: number) => {
-      const log = (...args: any[]) => {
-        console.log("[JXA]", ...args);
-      };
+/**
+ * Clicks a menu item either by index or by name.
+ */
+export default function buildMenuHandler(processName?: string) {
+  function menu(menuIndex: number): ReturnType<typeof run>;
+  function menu(menuBarItem: string, ...menuItems: string[]): ReturnType<typeof run>;
+  function menu(first: number | string, ...rest: string[]) {
+    return run(
+      (processNameArg: string | undefined, firstArg: number | string, restArgs: string[]) => {
+        const log = (...args: any[]) => {
+          console.log("[JXA]", ...args);
+        };
 
-      const assertExists = (obj: any, label: string) => {
-        if (!obj) throw new Error(`Failed at: ${label}`);
-        log("OK:", label);
-        return obj;
-      };
+        const normalize = (s: string) =>
+          s.replace(/[\u200B-\u200F\uFEFF\u202A-\u202E]/g, "").trim();
 
-      if (!Number.isInteger(menuIndex) || menuIndex < 0) {
-        throw new Error(`Expected menuIndex to be a non-negative integer, got: ${menuIndex}`);
-      }
+        const assertExists = (obj: any, label: string) => {
+          if (!obj) throw new Error(`Failed at: ${label}`);
+          log("OK:", label);
+          return obj;
+        };
 
-      const se = Application("System Events");
-      const proc = assertExists(
-        se.processes.whose({ frontmost: true })[0],
-        "frontmost process",
-      );
+        const findByName = (collection: any, target: string, label: string) => {
+          const normTarget = normalize(target);
+          const items = collection();
 
-      log("Frontmost process:", proc.name());
+          for (let i = 0; i < items.length; i++) {
+            try {
+              const raw = items[i].name();
+              const norm = normalize(raw);
 
-      const menuBar = assertExists(proc.menuBars[0], "menuBars[0]");
-      const items = menuBar.menuBarItems();
+              if (norm === normTarget) {
+                log(`Matched ${label}:`, `"${raw}"`);
+                return items[i];
+              }
+            } catch {}
+          }
 
-      // menuIndex is:
-      // 0 = Apple menu
-      // 1 = first regular app menu
-      // 2 = second regular app menu
-      // ...
-      //
-      // In System Events, this usually maps directly to menuBarItems()[index].
-      if (menuIndex >= items.length) {
-        throw new Error(
-          `menuIndex ${menuIndex} out of range; found ${items.length} menu bar items (valid range: 0-${items.length - 1})`,
-        );
-      }
+          log(`Available ${label}s:`);
+          for (let i = 0; i < items.length; i++) {
+            try {
+              log("-", `"${items[i].name()}"`);
+            } catch {}
+          }
 
-      const item = assertExists(items[menuIndex], `menuBarItems[${menuIndex}]`);
+          throw new Error(`Missing: ${label} "${target}"`);
+        };
 
-      if (menuIndex === 0) {
-        log("Clicking Apple menu");
-      } else {
-        try {
-          log(`Clicking menu ${menuIndex}: "${item.name()}"`);
-        } catch {
-          log(`Clicking menu ${menuIndex}`);
+        const se = Application("System Events");
+
+        if (processNameArg) {
+          const app = Application(processNameArg);
+          log("Activating app:", processNameArg);
+          app.activate();
+          delay(0.1);
         }
-      }
 
-      item.click();
-      log("Done");
-    }, menuIndex);
-  };
+        const proc = assertExists(
+          se.processes.whose({ frontmost: true })[0],
+          "frontmost process",
+        );
+
+        log("Frontmost process:", proc.name());
+
+        const menuBar = assertExists(proc.menuBars[0], "menuBars[0]");
+        const items = menuBar.menuBarItems();
+
+        if (typeof firstArg === "number") {
+          const menuIndex = firstArg;
+
+          if (!Number.isInteger(menuIndex) || menuIndex < 0) {
+            throw new Error(
+              `Expected menuIndex to be a non-negative integer, got: ${menuIndex}`,
+            );
+          }
+
+          if (menuIndex >= items.length) {
+            throw new Error(
+              `menuIndex ${menuIndex} out of range; found ${items.length} menu bar items (valid range: 0-${items.length - 1})`,
+            );
+          }
+
+          const item = assertExists(items[menuIndex], `menuBarItems[${menuIndex}]`);
+
+          if (menuIndex === 0) {
+            log("Clicking Apple menu");
+          } else {
+            try {
+              log(`Clicking menu ${menuIndex}: "${item.name()}"`);
+            } catch {
+              log(`Clicking menu ${menuIndex}`);
+            }
+          }
+
+          item.click();
+          log("Done");
+          return;
+        }
+
+        const menuItemsArg = [firstArg, ...restArgs];
+
+        if (menuItemsArg.length === 0) {
+          throw new Error("Expected at least one menu item name");
+        }
+
+        const [menuBarItem, ...menuItems] = menuItemsArg;
+
+        const menuBarItemRef = findByName(menuBar.menuBarItems, menuBarItem!, "menuBarItem");
+
+        let current = menuBarItemRef;
+
+        for (let i = 0; i < menuItems.length; i++) {
+          const name = menuItems[i]!;
+          log(`Traversing -> "${name}"`);
+
+          const menu = assertExists(current.menus[0], `menus[0] for "${name}"`);
+          const next = findByName(menu.menuItems, name, "menuItem");
+
+          if (i === menuItems.length - 1) {
+            log(`Clicking "${name}"`);
+            next.click();
+          } else {
+            current = next;
+          }
+        }
+
+        // If only the top-level menu name was passed, click/open it directly.
+        if (menuItems.length === 0) {
+          log(`Clicking top-level menu "${menuBarItem}"`);
+          menuBarItemRef.click();
+        }
+
+        log("Done");
+      },
+      processName,
+      first,
+      rest,
+    );
+  }
+
+  return menu;
 }
