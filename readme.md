@@ -33,7 +33,7 @@ In the default chord package, these are the categories assigned to the global ch
 `n` North / New\
 `e` East / End\
 `s` South / Start\
-`w` West / Forward\
+`w` West / Forward
 
 > We typically assign the cardinal directions to distinguish between actions with a "move" equivalent. For example, "move pane left" would typically be assigned `pl` (pane left) while "focus pane left" would be assigned `pw` (pane west).
 
