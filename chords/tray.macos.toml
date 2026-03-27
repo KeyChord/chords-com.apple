@@ -50,6 +50,9 @@ export default buildTrayHandler();
 '=-9/' = { name = "Tray: 9th End Item Right Click", args = [-9, 'right'] }
 
 '=b' = { name = "Tray: Battery" }
-'=w' = { name = "Tray: Wi-Fi" }
 '=c' = { name = "Tray: Control Center" }
 '=t' = { name = "Tray: Time & Date" }
+
+'?=w' = { name = "Tray Wi-Fi" }
+'=w' = { name = "Tray: Wi-Fi" }
+'=wv' = { name = "Tray Wi-Fi: Vary On/Off" }

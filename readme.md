@@ -22,6 +22,8 @@ In the default chord package, these are the categories assigned to the global ch
 `=` Tray\
 `.` Dock / Window Management
 
+> `'` is reserved for pass-through input during Chord Sentences.
+
 ## Conventions
 
 `l` Left\
@@ -63,8 +65,9 @@ In the default chord package, these are the categories assigned to the global ch
 `-` Decrease\
 `=` Increase\
 `,` Settings / Left Click\
-`.` Middle Click\
-`/` Right Click
+`.` Right Click\
+`;` Middle Click (Rare)\
+`/` Search
 
 ## Menu
 
