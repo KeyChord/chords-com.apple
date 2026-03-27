@@ -1,14 +1,12 @@
 {
-  "name": "@keychord/chords-default",
+  "name": "@keychord/chords-com.apple",
   "type": "module",
   "imports": {
-    "#/*": "./src/*"
+    "#/*": "./src/*",
+    "#js/*": "./js/*"
   },
   "exports": {
-    "./*": "./dist/*"
-  },
-  "engines": {
-    "pnpm": ">=9"
+    "./*": "./*"
   },
   "dependencies": {
     "desm": "^1.3.1",
@@ -22,8 +20,7 @@
   "devDependencies": {
     "@jxa/global-type": "^1.4.0",
     "@keychord/tsconfig": "latest",
-    "@keychord/vite-plugin": "0.0.0-alpha.0",
-    "bun-types": "^1.3.11",
+    "@keychord/vite-plugin": "^0.0.4",
     "typescript": "^6.0.2"
   },
   "packageManager": "pnpm@10.33.0"

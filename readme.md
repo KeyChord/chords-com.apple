@@ -1,6 +1,6 @@
-# @keychord/chords-default
+# @keychord/chords-com.apple
 
-This is the default chord package that comes activated in Chord out-of-the-box. 
+Chord package for pre-installed macOS apps.
 
 ## Apps
 
@@ -8,8 +8,6 @@ This is the default chord package that comes activated in Chord out-of-the-box.
 - [Safari](./chords/com/apple/safari/macos.toml) (`com.apple.safari`)
 - [Terminal](./chords/com/apple/Terminal/macos.toml) (`com.apple.Terminal`)
 - [Activity Monitor](./chords/com/apple/ActivityMonitor/macos.toml) (`com.apple.ActivityMonitor`)
-
-Also includes some system-wide macOS chords.
 
 ## Usage
 

@@ -1,5 +1,5 @@
-import keychord from '@keychord/vite-plugin'
+import chordPackage from '@keychord/vite-plugin'
 
 export default {
-  plugins: [keychord()]
+  plugins: [chordPackage()]
 }
