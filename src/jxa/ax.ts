@@ -55,6 +55,26 @@ export function cfTypeDescription(value: any) {
   }
 }
 
+export function isObjCRef(value: any) {
+  if (!value) return false;
+
+  try {
+    return String(value) === '[object Ref]';
+  } catch {
+    return false;
+  }
+}
+
+export function normalizeCfValue(value: any) {
+  if (!isObjCRef(value)) return value;
+
+  try {
+    return ObjC.castRefToObject(value);
+  } catch {
+    return value;
+  }
+}
+
 export function cfString(value: any): string | null {
   if (!value) return null;
 
@@ -113,7 +133,7 @@ export function cfArrayItems(value: any) {
     const items = [];
 
     for (let i = 0; i < count; i++) {
-      items.push($.CFArrayGetValueAtIndex(value, i));
+      items.push(normalizeCfValue($.CFArrayGetValueAtIndex(value, i)));
     }
 
     return items;
@@ -127,6 +147,7 @@ export function cfArrayItems(value: any) {
 }
 
 export function coerceAxValue(value: any): any {
+  value = normalizeCfValue(value);
   if (!value) return null;
   if (isAxElement(value)) return value;
   if (isCfArray(value)) return cfArrayItems(value).map(item => coerceAxValue(item));
@@ -139,9 +160,10 @@ export function coerceAxValue(value: any): any {
 }
 
 export function axCopy(el: any, attr: string) {
+  el = normalizeCfValue(el);
   const out = Ref();
   const err = $.AXUIElementCopyAttributeValue(el, $(attr), out);
-  return { err, value: out[0] ?? null };
+  return { err, value: normalizeCfValue(out[0] ?? null) };
 }
 
 export function axAttrNames(el: any) {

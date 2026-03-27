@@ -75,13 +75,7 @@ export function dumpFocusedElement(maxDepth = 3) {
     return;
   }
 
-  const app = jxa.frontmostAppElement();
-  if (!app) {
-    console.log('  <Could not create AX application element for frontmost app>');
-    return;
-  }
-
-  const focusedEl = jxa.axElement(app, 'AXFocusedUIElement');
+  const focusedEl = jxa.axElement(system, 'AXFocusedUIElement');
   if (!focusedEl) {
     console.log('  <AXFocusedUIElement unavailable>');
     return;
