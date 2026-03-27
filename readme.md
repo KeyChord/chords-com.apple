@@ -1,11 +1,17 @@
-# Chord's Default Chords
+# @keychord/chords-default
 
-These are the default chords that come bundled with Chord. In addition to system-wide macOS chords, they also contain chords for the following pre-installed macOS apps:
+This is the default chord package that comes activated in Chord out-of-the-box. 
+
+## Apps
 
 - [Finder](./chords/com/apple/finder/macos.toml) (`com.apple.finder`)
 - [Safari](./chords/com/apple/safari/macos.toml) (`com.apple.safari`)
 - [Terminal](./chords/com/apple/Terminal/macos.toml) (`com.apple.Terminal`)
 - [Activity Monitor](./chords/com/apple/ActivityMonitor/macos.toml) (`com.apple.ActivityMonitor`)
+
+Also includes some system-wide macOS chords.
+
+## Usage
 
 You can re-define these defaults in _Chord_ by simply adding a Chord Package with a new definition for one of these sequences (e.g. if you don't use Safari which is defined as `/b` in these defaults, you can simply a new chord to `/b` and it will be used instead.
 
