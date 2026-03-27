@@ -8,6 +8,15 @@ importers:
 
   .:
     dependencies:
+      desm:
+        specifier: ^1.3.1
+        version: 1.3.1
+      get-port:
+        specifier: ^7.2.0
+        version: 7.2.0
+      jquery-as-string:
+        specifier: ^0.4.0
+        version: 0.4.0
       jxa-run-compat:
         specifier: ^1.6.0
         version: 1.6.0
@@ -24,6 +33,9 @@ importers:
       '@jxa/global-type':
         specifier: ^1.4.0
         version: 1.4.0
+      bun-types:
+        specifier: ^1.3.11
+        version: 1.3.11
       chord-types:
         specifier: ^0.1.0
         version: 0.1.0
@@ -208,9 +220,15 @@ packages:
     resolution: {integrity: sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==}
     engines: {node: '>=18'}
 
+  '@types/node@25.5.0':
+    resolution: {integrity: sha512-jp2P3tQMSxWugkCUKLRPVUpGaL5MVFwF8RDuSRztfwgN1wmqJeMSbKlnEtQqU8UrhTmzEmZdu2I6v2dpp7XIxw==}
+
   ansi-regex@6.2.2:
     resolution: {integrity: sha512-Bq3SmSpyFHaWjPk8If9yc6svM8c56dB5BAtW4Qbw5jHTwwXXcTLoRMkpDJp6VL0XzlWaCHTXrkFURMYmD0sLqg==}
     engines: {node: '>=12'}
+
+  bun-types@1.3.11:
+    resolution: {integrity: sha512-1KGPpoxQWl9f6wcZh57LvrPIInQMn2TQ7jsgxqpRzg+l0QPOFvJVH7HmvHo/AiPgwXy+/Thf6Ov3EdVn1vOabg==}
 
   chord-types@0.1.0:
     resolution: {integrity: sha512-M3DtcJgOE7h7JEPtNFHXX6fZ3YNrAUEUtcT4IOHpdKrVCeFbVk6OO6U/zTm09vz7Rzfw2DHWwhaNpywdtY0owA==}
@@ -222,6 +240,9 @@ packages:
   crypto-random-string@4.0.0:
     resolution: {integrity: sha512-x8dy3RnvYdlUcPOjkEHqozhiwzKNSq7GcPuXFbnyMOCHxX8V3OgIg/pYuabl2sbUPfIJaeAQB7PMOK8DFIdoRA==}
     engines: {node: '>=12'}
+
+  desm@1.3.1:
+    resolution: {integrity: sha512-vgTAOosB1aHrmzjGnzFCbjvXbk8QAOC/36JxJhcBkeAuUy8QwRFxAWBHemiDpUB3cbrBruFUdzpUS21aocvaWg==}
 
   esbuild@0.27.4:
     resolution: {integrity: sha512-Rq4vbHnYkK5fws5NF7MYTU68FPRE1ajX7heQ/8QXXWqNgqqJ/GkmmyxIzUnf2Sr/bakf8l54716CcMGHYhMrrQ==}
@@ -239,6 +260,10 @@ packages:
   figures@6.1.0:
     resolution: {integrity: sha512-d+l3qxjSesT4V7v2fh+QnmFnUWv9lSpjarhShNTgBOfA0ttejbQUAlHLitbjkoRiDulW0OPoQPYIGhIC8ohejg==}
     engines: {node: '>=18'}
+
+  get-port@7.2.0:
+    resolution: {integrity: sha512-afP4W205ONCuMoPBqcR6PSXnzX35KTcJygfJfcp+QY+uwm3p20p1YczWXhlICIzGMCxYBQcySEcOgsJcrkyobg==}
+    engines: {node: '>=16'}
 
   get-stream@9.0.1:
     resolution: {integrity: sha512-kVCxPF3vQM/N0B1PmoqVUqgHP+EeVjmZSQn+1oCRPxd2P21P2F19lIgbR3HBosbB1PUhOAoctJnfEn2GbN2eZA==}
@@ -262,6 +287,9 @@ packages:
 
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
+
+  jquery-as-string@0.4.0:
+    resolution: {integrity: sha512-nGd4PLqHkSTdXN5fiBJLUQZptA78xDUSYdCJOGtnvCQwM5BO2BVJUinrg9h6Gtqn7d4IWlDisnauW2vazFaEkA==}
 
   jxa-run-compat@1.6.0:
     resolution: {integrity: sha512-+zF9bB89e614gXRfdJD2IuApK6jiQlMQWukiPINmCt2NR4bZqsjFJy7BxjAumsPDVssiREGPRud2aWYP41mUYA==}
@@ -346,6 +374,9 @@ packages:
     resolution: {integrity: sha512-bGdAIrZ0wiGDo5l8c++HWtbaNCWTS4UTv7RaTH/ThVIgjkveJt83m74bBHMJkuCbslY8ixgLBVZJIOiQlQTjfQ==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  undici-types@7.18.2:
+    resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
 
   unicorn-magic@0.3.0:
     resolution: {integrity: sha512-+QBBXBCvifc56fsbuxZQ6Sic3wqqc3WWaqxs58gvJrcOuN83HGTCwz3oS5phzU9LthRNE9VrJCFCLUgHeeFnfA==}
@@ -454,7 +485,15 @@ snapshots:
 
   '@sindresorhus/merge-streams@4.0.0': {}
 
+  '@types/node@25.5.0':
+    dependencies:
+      undici-types: 7.18.2
+
   ansi-regex@6.2.2: {}
+
+  bun-types@1.3.11:
+    dependencies:
+      '@types/node': 25.5.0
 
   chord-types@0.1.0: {}
 
@@ -467,6 +506,8 @@ snapshots:
   crypto-random-string@4.0.0:
     dependencies:
       type-fest: 1.4.0
+
+  desm@1.3.1: {}
 
   esbuild@0.27.4:
     optionalDependencies:
@@ -518,6 +559,8 @@ snapshots:
     dependencies:
       is-unicode-supported: 2.1.0
 
+  get-port@7.2.0: {}
+
   get-stream@9.0.1:
     dependencies:
       '@sec-ant/readable-stream': 0.4.1
@@ -532,6 +575,8 @@ snapshots:
   is-unicode-supported@2.1.0: {}
 
   isexe@2.0.0: {}
+
+  jquery-as-string@0.4.0: {}
 
   jxa-run-compat@1.6.0: {}
 
@@ -595,6 +640,8 @@ snapshots:
   type-fest@4.41.0: {}
 
   typescript@6.0.2: {}
+
+  undici-types@7.18.2: {}
 
   unicorn-magic@0.3.0: {}
 

@@ -1,127 +1,84 @@
-var __create = Object.create;
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
-  get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
-}) : x)(function(x) {
-  if (typeof require !== "undefined") return require.apply(this, arguments);
-  throw Error('Dynamic require of "' + x + '" is not supported');
-});
-var __commonJS = (cb, mod) => function __require2() {
-  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
-};
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
-
-// node_modules/.pnpm/jxa-run-compat@1.5.0/node_modules/jxa-run-compat/lib/run.js
-var require_run = __commonJS({
-  "node_modules/.pnpm/jxa-run-compat@1.5.0/node_modules/jxa-run-compat/lib/run.js"(exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.run = exports.runJXACode = void 0;
-    var child_process_1 = __require("child_process");
-    function runJXACode(jxaCode) {
-      return executeInOsa(jxaCode, []);
+// node_modules/.pnpm/jxa-run-compat@1.6.0/node_modules/jxa-run-compat/lib/run.js
+import { spawn } from "child_process";
+function run(jxaCodeFunction, ...args) {
+  const code = `
+ObjC.import('stdlib');
+var args = JSON.parse($.getenv('OSA_ARGS'));
+var fn   = (${jxaCodeFunction.toString()});
+var out  = fn.apply(null, args);
+JSON.stringify({ result: out });
+`;
+  return executeInOsa(code, args);
+}
+var DEFAULT_MAX_BUFFER = 1e3 * 1e3 * 100;
+function executeInOsa(code, args) {
+  return new Promise((resolve, reject) => {
+    const child = spawn("/usr/bin/osascript", ["-l", "JavaScript"], {
+      env: {
+        OSA_ARGS: JSON.stringify(args)
+      },
+      stdio: ["pipe", "pipe", "pipe"]
+    });
+    let stdoutBuffers = [];
+    let stderrBuffers = [];
+    let stdoutLength = 0;
+    let stderrLength = 0;
+    let done = false;
+    function finishError(err) {
+      if (done)
+        return;
+      done = true;
+      reject(err);
     }
-    exports.runJXACode = runJXACode;
-    function run2(jxaCodeFunction) {
-      var args = [];
-      for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
+    function onData(chunk, buffers, currentLength, streamName) {
+      const nextLength = currentLength + chunk.length;
+      if (nextLength > DEFAULT_MAX_BUFFER) {
+        child.kill();
+        finishError(new Error(`${streamName} maxBuffer length exceeded`));
+        return currentLength;
       }
-      var code = "\nObjC.import('stdlib');\nvar args = JSON.parse($.getenv('OSA_ARGS'));\nvar fn   = (".concat(jxaCodeFunction.toString(), ");\nvar out  = fn.apply(null, args);\nJSON.stringify({ result: out });\n");
-      return executeInOsa(code, args);
+      buffers.push(chunk);
+      return nextLength;
     }
-    exports.run = run2;
-    var DEFAULT_MAX_BUFFER = 1e3 * 1e3 * 100;
-    function executeInOsa(code, args) {
-      return new Promise(function(resolve, reject) {
-        var child = (0, child_process_1.spawn)("/usr/bin/osascript", ["-l", "JavaScript"], {
-          env: {
-            OSA_ARGS: JSON.stringify(args)
-          },
-          stdio: ["pipe", "pipe", "pipe"]
-        });
-        var stdoutBuffers = [];
-        var stderrBuffers = [];
-        var stdoutLength = 0;
-        var stderrLength = 0;
-        var done = false;
-        function finishError(err) {
-          if (done)
-            return;
-          done = true;
-          reject(err);
-        }
-        function onData(chunk, buffers, currentLength, streamName) {
-          var nextLength = currentLength + chunk.length;
-          if (nextLength > DEFAULT_MAX_BUFFER) {
-            child.kill();
-            finishError(new Error("".concat(streamName, " maxBuffer length exceeded")));
-            return currentLength;
-          }
-          buffers.push(chunk);
-          return nextLength;
-        }
-        child.stdout.on("data", function(chunk) {
-          stdoutLength = onData(chunk, stdoutBuffers, stdoutLength, "stdout");
-        });
-        child.stderr.on("data", function(chunk) {
-          stderrLength = onData(chunk, stderrBuffers, stderrLength, "stderr");
-        });
-        child.on("error", function(err) {
-          finishError(err);
-        });
-        child.on("close", function() {
-          if (done)
-            return;
-          var stdout = Buffer.concat(stdoutBuffers);
-          var stderr = Buffer.concat(stderrBuffers);
-          if (stderr.length) {
-            console.error(stderr.toString());
-          }
-          if (!stdout.length) {
-            done = true;
-            resolve(void 0);
-          }
-          try {
-            var result = JSON.parse(stdout.toString().trim()).result;
-            done = true;
-            resolve(result);
-          } catch (errorOutput) {
-            done = true;
-            resolve(stdout.toString().trim());
-          }
-        });
-        child.stdin.write(code);
-        child.stdin.end();
-      });
-    }
-  }
-});
+    child.stdout.on("data", (chunk) => {
+      stdoutLength = onData(chunk, stdoutBuffers, stdoutLength, "stdout");
+    });
+    child.stderr.on("data", (chunk) => {
+      stderrLength = onData(chunk, stderrBuffers, stderrLength, "stderr");
+    });
+    child.on("error", (err) => {
+      finishError(err);
+    });
+    child.on("close", () => {
+      if (done)
+        return;
+      const stdout = Buffer.concat(stdoutBuffers);
+      const stderr = Buffer.concat(stderrBuffers);
+      if (stderr.length) {
+        console.error(stderr.toString());
+      }
+      if (!stdout.length) {
+        done = true;
+        resolve(void 0);
+      }
+      try {
+        const result = JSON.parse(stdout.toString().trim()).result;
+        done = true;
+        resolve(result);
+      } catch (errorOutput) {
+        done = true;
+        resolve(stdout.toString().trim());
+      }
+    });
+    child.stdin.write(code);
+    child.stdin.end();
+  });
+}
 
 // src/tray.ts
-var import_jxa_run_compat = __toESM(require_run(), 1);
 function buildTrayHandler() {
   return function tray(trayIndex, clickType = "left") {
-    return (0, import_jxa_run_compat.run)((trayIndex2, clickType2) => {
+    return run((trayIndex2, clickType2) => {
       ObjC.import("ApplicationServices");
       ObjC.import("CoreGraphics");
       const RE_SIZE_NAMED = /w:\s*([-0-9.]+)\s*h:\s*([-0-9.]+)/i;

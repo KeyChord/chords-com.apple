@@ -2,12 +2,13 @@ import { executeInOsa } from 'jxa-run-compat'
 import { outdent } from 'outdent'
 
 export function runJxaWithUtils(jxa: typeof import('../jxa/_.js'), fn: any, ...args: any[]) {
+  const jxaEntries = Object.entries(jxa).filter(([, value]) => typeof value === 'function');
   let jxaBlockContents = '';
-  for (const [key, value] of Object.entries(jxa)) {
+  for (const [key, value] of jxaEntries) {
     jxaBlockContents += `var ${key} = ${value.toString()};\n`;
   }
 
-  jxaBlockContents += Object.keys(jxa).map(key => `jxa[${JSON.stringify(key)}] = ${key};`).join('\n')
+  jxaBlockContents += jxaEntries.map(([key]) => `jxa[${JSON.stringify(key)}] = ${key};`).join('\n')
 
   const code = outdent`
     ObjC.import('stdlib');

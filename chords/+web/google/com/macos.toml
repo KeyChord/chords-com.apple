@@ -1,0 +1,11 @@
+[config]
+name = "google.com"
+
+[config.js]
+module = '''
+
+'''
+
+[chords]
+'?r' = { name = "Results" }
+r1 = { name = "Result 1", args = ['$(`div[lang="en"]:has(cite[role="text"])`).eq(1)'] }
