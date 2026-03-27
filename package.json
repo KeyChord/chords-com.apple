@@ -15,8 +15,9 @@
     "build": "pnpm run build:typescript"
   },
   "dependencies": {
-    "jxa-run-compat": "^1.5.0",
+    "jxa-run-compat": "^1.6.0",
     "nano-spawn-compat": "^2.0.6",
+    "outdent": "^0.8.0",
     "run-jxa": "^4.0.0"
   },
   "devDependencies": {

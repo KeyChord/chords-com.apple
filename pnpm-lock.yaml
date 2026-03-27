@@ -9,11 +9,14 @@ importers:
   .:
     dependencies:
       jxa-run-compat:
-        specifier: ^1.5.0
-        version: 1.5.0
+        specifier: ^1.6.0
+        version: 1.6.0
       nano-spawn-compat:
         specifier: ^2.0.6
         version: 2.0.6
+      outdent:
+        specifier: ^0.8.0
+        version: 0.8.0
       run-jxa:
         specifier: ^4.0.0
         version: 4.0.0
@@ -260,8 +263,8 @@ packages:
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
-  jxa-run-compat@1.5.0:
-    resolution: {integrity: sha512-MQf+ZcV8pXRFCbDhuxr9vWRvzT/j9OpQkJlpUE6pKdoJrAYr14cLfoVscuum88JuBFIjijNZc2Jz0zgqER1ipA==}
+  jxa-run-compat@1.6.0:
+    resolution: {integrity: sha512-+zF9bB89e614gXRfdJD2IuApK6jiQlMQWukiPINmCt2NR4bZqsjFJy7BxjAumsPDVssiREGPRud2aWYP41mUYA==}
 
   llrt-types@https://codeload.github.com/awslabs/llrt/tar.gz/fa65a85faa1af38a45bed5d6703d61ad84737894#path:/types:
     resolution: {path: /types, tarball: https://codeload.github.com/awslabs/llrt/tar.gz/fa65a85faa1af38a45bed5d6703d61ad84737894}
@@ -278,6 +281,9 @@ packages:
   npm-run-path@6.0.0:
     resolution: {integrity: sha512-9qny7Z9DsQU8Ou39ERsPU4OZQlSTP47ShQzuKZ6PRXpYLtIFgl/DEBYEXKlvcEa+9tHVcK8CF81Y2V72qaZhWA==}
     engines: {node: '>=18'}
+
+  outdent@0.8.0:
+    resolution: {integrity: sha512-KiOAIsdpUTcAXuykya5fnVVT+/5uS0Q1mrkRHcF89tpieSmY33O/tmc54CqwA+bfhbtEfZUNLHaPUiB9X3jt1A==}
 
   parse-ms@4.0.0:
     resolution: {integrity: sha512-TXfryirbmq34y8QBwgqCVLi+8oA3oWx2eAnSn62ITyEhEYaWRlVZ2DvMM9eZbMs/RfxPu/PK/aBLyGj4IrqMHw==}
@@ -527,7 +533,7 @@ snapshots:
 
   isexe@2.0.0: {}
 
-  jxa-run-compat@1.5.0: {}
+  jxa-run-compat@1.6.0: {}
 
   llrt-types@https://codeload.github.com/awslabs/llrt/tar.gz/fa65a85faa1af38a45bed5d6703d61ad84737894#path:/types: {}
 
@@ -543,6 +549,8 @@ snapshots:
     dependencies:
       path-key: 4.0.0
       unicorn-magic: 0.3.0
+
+  outdent@0.8.0: {}
 
   parse-ms@4.0.0: {}
 
