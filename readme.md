@@ -13,7 +13,7 @@ You can also use this Chord Package as a template for creating your own chords. 
 
 ## Default Global Keys
 
-In the default chord package, these are the categories assigned to the global chords (which must start with a non-alphanumeric character). If you want to define your own custom global chord which doesn't fit into any of the following categories, it's recommended to use one of the remaining symbols (`` ` ``, `]`, `;`, `'`).
+In the default chord package, these are the categories assigned to the global chords (which must start with a non-alphanumeric character). If you want to define your own custom global chord which doesn't fit into any of the following categories, it's recommended to use one of the remaining symbols (`` ` ``, `]`, `;`, NOT `'` since it's reserved).
 
 `,` Universal Commands (`,<key>` maps to `cmd+<key>`)\
 `\` System Shortcuts\
