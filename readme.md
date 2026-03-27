@@ -62,7 +62,7 @@ In the default chord package, these are the categories assigned to the global ch
 `]` Next\
 `-` Decrease\
 `=` Increase\
-`,` Settings / Left Click (rare)
+`,` Settings / Left Click\
 `.` Middle Click\
 `/` Right Click
 

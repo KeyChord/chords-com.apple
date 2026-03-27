@@ -30,21 +30,26 @@ export default buildTrayHandler();
 '=-7' = { name = "Tray: 7th End Item", args = [-7] }
 '=-8' = { name = "Tray: 8th End Item", args = [-8] }
 '=-9' = { name = "Tray: 9th End Item", args = [-9] }
-'=1r' = { name = "Tray: 1st Item Right Click", args = [0, 'right'] }
-'=2r' = { name = "Tray: 2nd Item Right Click", args = [1, 'right'] }
-'=3r' = { name = "Tray: 3rd Item Right Click", args = [2, 'right'] }
-'=4r' = { name = "Tray: 4th Item Right Click", args = [3, 'right'] }
-'=5r' = { name = "Tray: 5th Item Right Click", args = [4, 'right'] }
-'=6r' = { name = "Tray: 6th Item Right Click", args = [5, 'right'] }
-'=7r' = { name = "Tray: 7th Item Right Click", args = [6, 'right'] }
-'=8r' = { name = "Tray: 8th Item Right Click", args = [7, 'right'] }
-'=9r' = { name = "Tray: 9th Item Right Click", args = [8, 'right'] }
-'=-1r' = { name = "Tray: 1st End Item Right Click", args = [-1, 'right'] }
-'=-2r' = { name = "Tray: 2nd End Item Right Click", args = [-2, 'right'] }
-'=-3r' = { name = "Tray: 3rd End Item Right Click", args = [-3, 'right'] }
-'=-4r' = { name = "Tray: 4th End Item Right Click", args = [-4, 'right'] }
-'=-5r' = { name = "Tray: 5th End Item Right Click", args = [-5, 'right'] }
-'=-6r' = { name = "Tray: 6th End Item Right Click", args = [-6, 'right'] }
-'=-7r' = { name = "Tray: 7th End Item Right Click", args = [-7, 'right'] }
-'=-8r' = { name = "Tray: 8th End Item Right Click", args = [-8, 'right'] }
-'=-9r' = { name = "Tray: 9th End Item Right Click", args = [-9, 'right'] }
+'=1/' = { name = "Tray: 1st Item Right Click", args = [0, 'right'] }
+'=2/' = { name = "Tray: 2nd Item Right Click", args = [1, 'right'] }
+'=3/' = { name = "Tray: 3rd Item Right Click", args = [2, 'right'] }
+'=4/' = { name = "Tray: 4th Item Right Click", args = [3, 'right'] }
+'=5/' = { name = "Tray: 5th Item Right Click", args = [4, 'right'] }
+'=6/' = { name = "Tray: 6th Item Right Click", args = [5, 'right'] }
+'=7/' = { name = "Tray: 7th Item Right Click", args = [6, 'right'] }
+'=8/' = { name = "Tray: 8th Item Right Click", args = [7, 'right'] }
+'=9/' = { name = "Tray: 9th Item Right Click", args = [8, 'right'] }
+'=-1/' = { name = "Tray: 1st End Item Right Click", args = [-1, 'right'] }
+'=-2/' = { name = "Tray: 2nd End Item Right Click", args = [-2, 'right'] }
+'=-3/' = { name = "Tray: 3rd End Item Right Click", args = [-3, 'right'] }
+'=-4/' = { name = "Tray: 4th End Item Right Click", args = [-4, 'right'] }
+'=-5/' = { name = "Tray: 5th End Item Right Click", args = [-5, 'right'] }
+'=-6/' = { name = "Tray: 6th End Item Right Click", args = [-6, 'right'] }
+'=-7/' = { name = "Tray: 7th End Item Right Click", args = [-7, 'right'] }
+'=-8/' = { name = "Tray: 8th End Item Right Click", args = [-8, 'right'] }
+'=-9/' = { name = "Tray: 9th End Item Right Click", args = [-9, 'right'] }
+
+'=b' = { name = "Tray: Battery" }
+'=w' = { name = "Tray: Wi-Fi" }
+'=c' = { name = "Tray: Control Center" }
+'=t' = { name = "Tray: Time & Date" }

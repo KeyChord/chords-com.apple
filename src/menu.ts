@@ -26,14 +26,13 @@ type MenuHandler = {
   menuByLetters(query: string): ReturnType<typeof run>;
 };
 
-export default function buildMenuHandler(processName?: string): MenuHandler {
+export default function buildMenuHandler(): MenuHandler {
   const runMenuAction = (
     mode: "index" | "letters",
     value: number | string,
   ) =>
     run(
       (
-        processNameArg: string | undefined,
         modeArg: "index" | "letters",
         valueArg: number | string,
       ) => {
@@ -268,13 +267,6 @@ export default function buildMenuHandler(processName?: string): MenuHandler {
 
         const se = Application("System Events");
 
-        if (processNameArg) {
-          const app = Application(processNameArg);
-          log("Activating app:", processNameArg);
-          app.activate();
-          delay(0.1);
-        }
-
         const proc = assertExists(
           se.processes.whose({ frontmost: true })[0],
           "frontmost process",
@@ -311,7 +303,6 @@ export default function buildMenuHandler(processName?: string): MenuHandler {
         clickExpandedMenuItemByQuery(items, query);
         log("Done");
       },
-      processName,
       mode,
       value,
     );
