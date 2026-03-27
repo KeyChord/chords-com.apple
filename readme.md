@@ -20,8 +20,7 @@ In the default chord package, these are the categories assigned to the global ch
 `/` Global Shortcuts / Applications\
 `-` Menu Bar\
 `=` Tray\
-`.` Dock\
-`[` Window Management
+`.` Dock / Window Management
 
 ## Directions
 
