@@ -1,6 +1,6 @@
-# Chord's Default Chords
+# @keychord/chords-default
 
-These are the default chords that come bundled with Chord. In addition to system-wide macOS chords, they also contain chords for the following pre-installed macOS apps:
+This is the default chord package that comes activated in Chord out-of-the-box. In addition to system-wide macOS chords, they also contain chords for the following pre-installed macOS apps:
 
 - [Finder](./chords/com/apple/finder/macos.toml) (`com.apple.finder`)
 - [Safari](./chords/com/apple/safari/macos.toml) (`com.apple.safari`)
