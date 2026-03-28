@@ -1,7 +1,7 @@
-import chordPackage from '@keychord/vite-plugin'
+import { config } from '@keychord/config'
 
-export default {
-  plugins: [chordPackage({
-    vendor: ['@keychord/chords-menu']
-  })]
-}
+export default config({
+  vendor: [
+    '@keychord/chords-menu'
+  ]
+});

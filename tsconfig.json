@@ -1,4 +1,4 @@
 {
   "extends": "@keychord/tsconfig",
-  "include": ["src", "../chords-tray/src/jxa/jxa.ts"]
+  "include": ["src"]
 }
