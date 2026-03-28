@@ -1,2 +1,0 @@
-overrides:
-  '@keychord/tsconfig': link:../../../../Library/pnpm/global/5/node_modules/@keychord/tsconfig

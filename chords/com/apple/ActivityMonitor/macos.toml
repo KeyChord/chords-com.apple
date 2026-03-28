@@ -1,11 +1,7 @@
-[config]
 name = "Activity Monitor"
 
-[config.js]
-module = '''
-import buildMenuHandler from "dist/menu.js"
-export const menu = buildMenuHandler("Activity Monitor")
-'''
+[js]
+menu = "@keychord/chords-menu/js/menu.js"
 
 [chords]
 '/am' = { name = "Activity Monitor", shell = "open -a 'Activity Monitor'" }
