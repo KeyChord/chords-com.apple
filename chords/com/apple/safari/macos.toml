@@ -1,11 +1,7 @@
-[config]
 name = "Safari"
 
-[config.js]
-module = '''
-import buildMenuHandler from 'dist/menu.js';
-export const menu = buildMenuHandler();
-'''
+[js]
+menu = '@keychord/chords-menu/js/menu.js'
 
 [chords]
 # `b` for Browser. Meant to be overriden.
@@ -19,9 +15,9 @@ wqa = { name = "Window: Quit All",  shortcut = "cmd+alt+w" }
 '?t' = { name = "Tab" }
 tn = { name = "Tab: New", shortcut = "cmd+t" }
 tq = { name = "Tab: Quit", command = "Close the current tab, or pop-up", shortcut = "cmd+w" }
-tp = { name = "Tab: Pin", 'args:menu' = ['Window', 'Pin Tab'] }
-td = { name = "Tab: Duplicate", 'args:menu' = ['Window', 'Duplicate Tab'] }
-tw = { name = "Tab: Windowize", 'args:menu' = ['Window', 'Move Tab to New Window'] }
+tp = { name = "Tab: Pin", 'js:menu' = ['Window', 'Pin Tab'] }
+td = { name = "Tab: Duplicate", 'js:menu' = ['Window', 'Duplicate Tab'] }
+tw = { name = "Tab: Windowize", 'js:menu' = ['Window', 'Move Tab to New Window'] }
 't]' = { name = "Tab: Next", command = "Jump to the next open tab", shortcut = "ctrl+right" }
 't[' = { name = "Tab: Previous", command = "Jump to the previous open tab", shortcut = "ctrl+shift+right" }
 t1 = { name = "Tab 1", command = "Jump to a specific tab", shortcut = "cmd+1" }

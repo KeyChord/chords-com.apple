@@ -7,57 +7,57 @@ menu = "@keychord/chords-menu/js/menu.js"
 '/am' = { name = "Activity Monitor", shell = "open -a 'Activity Monitor'" }
 
 '?v' = { name = "View" }
-va = { name = "View: All Processes", 'args:menu' = ["View", "All Processes"] }
-vh = { name = "View: Hierarchially, All Processes", 'args:menu' = ["View", "All Processes, Hierarchically"] }
-vm = { name = "View: My Processes", 'args:menu' = ["View", "My Processes"] }
-vs = { name = "View: Selected Processes", 'args:menu' = ["View", "Selected Processes"] }
-vy = { name = "View: System Processes", 'args:menu' = ["View", "System Processes"] }
-vo = { name = "View: Other Users' Processes", 'args:menu' = ["View", "Other Users’ Processes"] }
-vc = { name = "View: Current (Active) Processes", 'args:menu' = ["View", "Active Processes"] }
-vi = { name = "View: Inactive Processes", 'args:menu' = ["View", "Inactive Processes"] }
-vg = { name = "View: GPU Processes", 'args:menu' = ["View", "GPU Processes"] }
-vw = { name = "View: Windowed Processes", 'args:menu' = ["View", "Windowed Processes"] }
-vl = { name = "View: Last 12 Hour Applications", 'args:menu' = ["View", "Applications in last 12 hours"] }
-vp = { name = "View: Processes, by GPU", 'args:menu' = ["View", "Processes, by GPU"] }
+va = { name = "View: All Processes", 'js:menu' = ["View", "All Processes"] }
+vh = { name = "View: Hierarchially, All Processes", 'js:menu' = ["View", "All Processes, Hierarchically"] }
+vm = { name = "View: My Processes", 'js:menu' = ["View", "My Processes"] }
+vs = { name = "View: Selected Processes", 'js:menu' = ["View", "Selected Processes"] }
+vy = { name = "View: System Processes", 'js:menu' = ["View", "System Processes"] }
+vo = { name = "View: Other Users' Processes", 'js:menu' = ["View", "Other Users’ Processes"] }
+vc = { name = "View: Current (Active) Processes", 'js:menu' = ["View", "Active Processes"] }
+vi = { name = "View: Inactive Processes", 'js:menu' = ["View", "Inactive Processes"] }
+vg = { name = "View: GPU Processes", 'js:menu' = ["View", "GPU Processes"] }
+vw = { name = "View: Windowed Processes", 'js:menu' = ["View", "Windowed Processes"] }
+vl = { name = "View: Last 12 Hour Applications", 'js:menu' = ["View", "Applications in last 12 hours"] }
+vp = { name = "View: Processes, by GPU", 'js:menu' = ["View", "Processes, by GPU"] }
 
 '?p' = { name = "Process" }
-pf  = { name = "Process: Filter", 'args:menu' = ["View", "Filter Processes"] }
-pi  = { name = "Process: Inspect", 'args:menu' = ["View", "Inspect Process"] }
-ps  = { name = "Process: Sample", 'args:menu' = ["View", "Sample Process"] }
-pq  = { name = "Process: Quit", 'args:menu' = ["View", "Quit Process"] }
-pss = { name = "Process: Send Signal", 'args:menu' = ["View", "Send Signal to Process..."] }
-psd = { name = "Process: Show Deltas", 'args:menu' = ["View", "Show Deltas for Process"] }
+pf  = { name = "Process: Filter", 'js:menu' = ["View", "Filter Processes"] }
+pi  = { name = "Process: Inspect", 'js:menu' = ["View", "Inspect Process"] }
+ps  = { name = "Process: Sample", 'js:menu' = ["View", "Sample Process"] }
+pq  = { name = "Process: Quit", 'js:menu' = ["View", "Quit Process"] }
+pss = { name = "Process: Send Signal", 'js:menu' = ["View", "Send Signal to Process..."] }
+psd = { name = "Process: Show Deltas", 'js:menu' = ["View", "Show Deltas for Process"] }
 
 '?r' = { name = "Run" }
-rs = { name = "Run: Spindump", 'args:menu' = ["View", "Run Spindump"] }
-rd = { name = "Run: Diagonstics for System", 'args:menu' = ["View", "Run System Diagnostics..."] }
+rs = { name = "Run: Spindump", 'js:menu' = ["View", "Run Spindump"] }
+rd = { name = "Run: Diagonstics for System", 'js:menu' = ["View", "Run System Diagnostics..."] }
 
 '?c' = { name = "Columns" }
-cpi  = { name = "Columns: Process ID", 'args:menu' = ["View", "Columns", "Process ID"] }
-cu   = { name = "Columns: User", 'args:menu' = ["View", "Columns", "User"] }
-cpc  = { name = "Columns: % CPU", 'args:menu' = ["View", "Columns", "% CPU"] }
-cct  = { name = "Columns: CPU Time", 'args:menu' = ["View", "Columns", "CPU Time"] }
-cpg  = { name = "Columns: % GPU", 'args:menu' = ["View", "Columns", "% GPU"] }
-cgt  = { name = "Columns: GPU Time", 'args:menu' = ["View", "Columns", "GPU Time"] }
-cnt  = { name = "Columns: # Threads", 'args:menu' = ["View", "Columns", "# Threads"] }
-cnp  = { name = "Columns: # Ports", 'args:menu' = ["View", "Columns", "# Ports"] }
-crm  = { name = "Columns: Real Memory", 'args:menu' = ["View", "Columns", "Real Memory"] }
-crpm = { name = "Columns: Real Private Memory", 'args:menu' = ["View", "Columns", "Real Private Memory"] }
-crsm = { name = "Columns: Real Shared Memory", 'args:menu' = ["View", "Columns", "Real Shared Memory"] }
-ck   = { name = "Columns: Kind", 'args:menu' = ["View", "Columns", "Kind"] }
-cst  = { name = "Columns: Sudden Termination", 'args:menu' = ["View", "Columns", "Sudden Termination"] }
-cs   = { name = "Columns: Sandbox", 'args:menu' = ["View", "Columns", "Sandbox"] }
-cr   = { name = "Columns: Restricted", 'args:menu' = ["View", "Columns", "Restricted"] }
-ciwu = { name = "Columns: Idle Wake Ups", 'args:menu' = ["View", "Columns", "Idle Wake Ups"] }
-cei  = { name = "Columns: Energy Impact", 'args:menu' = ["View", "Columns", "Energy Impact"] }
-can  = { name = "Columns: App Nap", 'args:menu' = ["View", "Columns", "App Nap"] }
-csb  = { name = "Columns: Sent Bytes", 'args:menu' = ["View", "Columns", "Sent Bytes"] }
-csp  = { name = "Columns: Sent Packets", 'args:menu' = ["View", "Columns", "Sent Packets"] }
-crb  = { name = "Columns: Received Bytes", 'args:menu' = ["View", "Columns", "Received Bytes"] }
-crp  = { name = "Columns: Received Packets", 'args:menu' = ["View", "Columns", "Received Packets"] }
-cpm  = { name = "Columns: Purgeable Memory", 'args:menu' = ["View", "Columns", "Purgeable Memory"] }
-cm   = { name = "Columns: Memory", 'args:menu' = ["View", "Columns", "Memory"] }
-ccm  = { name = "Columns: Compressed Memory", 'args:menu' = ["View", "Columns", "Compressed Memory"] }
-cbw  = { name = "Columns: Bytes Written", 'args:menu' = ["View", "Columns", "Bytes Written"] }
-cbr  = { name = "Columns: Bytes Read", 'args:menu' = ["View", "Columns", "Bytes Read"] }
-cps  = { name = "Columns: Preventing Sleep", 'args:menu' = ["View", "Columns", "Preventing Sleep"] }
+cpi  = { name = "Columns: Process ID", 'js:menu' = ["View", "Columns", "Process ID"] }
+cu   = { name = "Columns: User", 'js:menu' = ["View", "Columns", "User"] }
+cpc  = { name = "Columns: % CPU", 'js:menu' = ["View", "Columns", "% CPU"] }
+cct  = { name = "Columns: CPU Time", 'js:menu' = ["View", "Columns", "CPU Time"] }
+cpg  = { name = "Columns: % GPU", 'js:menu' = ["View", "Columns", "% GPU"] }
+cgt  = { name = "Columns: GPU Time", 'js:menu' = ["View", "Columns", "GPU Time"] }
+cnt  = { name = "Columns: # Threads", 'js:menu' = ["View", "Columns", "# Threads"] }
+cnp  = { name = "Columns: # Ports", 'js:menu' = ["View", "Columns", "# Ports"] }
+crm  = { name = "Columns: Real Memory", 'js:menu' = ["View", "Columns", "Real Memory"] }
+crpm = { name = "Columns: Real Private Memory", 'js:menu' = ["View", "Columns", "Real Private Memory"] }
+crsm = { name = "Columns: Real Shared Memory", 'js:menu' = ["View", "Columns", "Real Shared Memory"] }
+ck   = { name = "Columns: Kind", 'js:menu' = ["View", "Columns", "Kind"] }
+cst  = { name = "Columns: Sudden Termination", 'js:menu' = ["View", "Columns", "Sudden Termination"] }
+cs   = { name = "Columns: Sandbox", 'js:menu' = ["View", "Columns", "Sandbox"] }
+cr   = { name = "Columns: Restricted", 'js:menu' = ["View", "Columns", "Restricted"] }
+ciwu = { name = "Columns: Idle Wake Ups", 'js:menu' = ["View", "Columns", "Idle Wake Ups"] }
+cei  = { name = "Columns: Energy Impact", 'js:menu' = ["View", "Columns", "Energy Impact"] }
+can  = { name = "Columns: App Nap", 'js:menu' = ["View", "Columns", "App Nap"] }
+csb  = { name = "Columns: Sent Bytes", 'js:menu' = ["View", "Columns", "Sent Bytes"] }
+csp  = { name = "Columns: Sent Packets", 'js:menu' = ["View", "Columns", "Sent Packets"] }
+crb  = { name = "Columns: Received Bytes", 'js:menu' = ["View", "Columns", "Received Bytes"] }
+crp  = { name = "Columns: Received Packets", 'js:menu' = ["View", "Columns", "Received Packets"] }
+cpm  = { name = "Columns: Purgeable Memory", 'js:menu' = ["View", "Columns", "Purgeable Memory"] }
+cm   = { name = "Columns: Memory", 'js:menu' = ["View", "Columns", "Memory"] }
+ccm  = { name = "Columns: Compressed Memory", 'js:menu' = ["View", "Columns", "Compressed Memory"] }
+cbw  = { name = "Columns: Bytes Written", 'js:menu' = ["View", "Columns", "Bytes Written"] }
+cbr  = { name = "Columns: Bytes Read", 'js:menu' = ["View", "Columns", "Bytes Read"] }
+cps  = { name = "Columns: Preventing Sleep", 'js:menu' = ["View", "Columns", "Preventing Sleep"] }
