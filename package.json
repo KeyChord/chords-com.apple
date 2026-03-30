@@ -12,7 +12,8 @@
   },
   "devDependencies": {
     "@jxa/global-type": "^1.4.0",
-    "@keychord/tsconfig": "latest",
+    "@keychord/config": "*",
+    "@keychord/tsconfig": "^0.0.5",
     "@keychord/vite-plugin": "^0.0.4",
     "typescript": "^6.0.2"
   },

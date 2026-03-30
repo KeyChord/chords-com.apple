@@ -1,7 +1,8 @@
 name = "Safari"
 
-[js]
-menu = '@keychord/chords-menu/js/menu.js'
+[handlers.menu]
+file = '@keychord/chords-menu/js/menu.js'
+args = ["Safari"]
 
 [chords]
 # `b` for Browser. Meant to be overriden.
@@ -15,9 +16,9 @@ wqa = { name = "Window: Quit All",  shortcut = "cmd+alt+w" }
 '?t' = { name = "Tab" }
 tn = { name = "Tab: New", shortcut = "cmd+t" }
 tq = { name = "Tab: Quit", command = "Close the current tab, or pop-up", shortcut = "cmd+w" }
-tp = { name = "Tab: Pin", 'js:menu' = ['Window', 'Pin Tab'] }
-td = { name = "Tab: Duplicate", 'js:menu' = ['Window', 'Duplicate Tab'] }
-tw = { name = "Tab: Windowize", 'js:menu' = ['Window', 'Move Tab to New Window'] }
+tp = { name = "Tab: Pin", 'emit:menu' = ['Window', 'Pin Tab'] }
+td = { name = "Tab: Duplicate", 'emit:menu' = ['Window', 'Duplicate Tab'] }
+tw = { name = "Tab: Windowize", 'emit:menu' = ['Window', 'Move Tab to New Window'] }
 't]' = { name = "Tab: Next", command = "Jump to the next open tab", shortcut = "ctrl+right" }
 't[' = { name = "Tab: Previous", command = "Jump to the previous open tab", shortcut = "ctrl+shift+right" }
 t1 = { name = "Tab 1", command = "Jump to a specific tab", shortcut = "cmd+1" }
