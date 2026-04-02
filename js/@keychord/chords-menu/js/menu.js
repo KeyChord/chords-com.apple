@@ -9,7 +9,7 @@ var out  = fn.apply(null, args);
 JSON.stringify({ result: out });
 `, args);
 }
-var DEFAULT_MAX_BUFFER = 1e3 * 1e3 * 100;
+const DEFAULT_MAX_BUFFER = 1e3 * 1e3 * 100;
 /**
 * execute the `code` in `osascript`
 */
@@ -75,9 +75,9 @@ function executeInOsa(code, args) {
 	});
 }
 //#endregion
-//#region src/menu.ts
-function buildMenuHandler() {
-	const runMenuAction = (mode, value) => run((modeArg, valueArg) => {
+//#region src/js/menu.ts
+async function runMenuAction(processName, action, value) {
+	await run((processName, actionArg, valueArg) => {
 		const log = (...args) => console.log("[JXA]", ...args);
 		const normalize = (s) => String(s).replace(/[\u200B-\u200F\uFEFF\u202A-\u202E]/g, "").trim().toLowerCase();
 		const assertExists = (obj, label) => {
@@ -156,12 +156,10 @@ function buildMenuHandler() {
 			}
 			return null;
 		};
-		const clickTopLevelMenuByIndex = (items, oneBasedIndex) => {
-			if (!Number.isInteger(oneBasedIndex) || oneBasedIndex < 1) throw new Error(`Expected menuIndex to be a positive integer, got: ${oneBasedIndex}`);
-			const zeroBasedIndex = oneBasedIndex - 1;
-			if (zeroBasedIndex >= items.length) throw new Error(`menuIndex ${oneBasedIndex} out of range; found ${items.length} menu bar items`);
+		const clickTopLevelMenuByIndex = (items, zeroBasedIndex) => {
+			if (zeroBasedIndex >= items.length) throw new Error(`menuIndex ${zeroBasedIndex} out of range; found ${items.length} menu bar items`);
 			const item = assertExists(items[zeroBasedIndex], `menuBarItems[${zeroBasedIndex}]`);
-			log(`Clicking top-level menu #${oneBasedIndex}:`, safeCall(() => item.name(), "<unknown>"));
+			log(`Clicking top-level menu #${zeroBasedIndex}:`, safeCall(() => item.name(), "<unknown>"));
 			item.click();
 		};
 		const clickTopLevelMenuByRepeatedLetters = (items, query) => {
@@ -193,10 +191,16 @@ function buildMenuHandler() {
 			log(`Clicking expanded menu item:`, safeCall(() => item.name(), "<unknown>"));
 			item.click();
 		};
-		const proc = assertExists(Application("System Events").processes.whose({ frontmost: true })[0], "frontmost process");
+		const se = Application("System Events");
+		if (processName) {
+			const app = Application(processName);
+			log("Activating app:", processName);
+			app.activate();
+		}
+		const proc = assertExists(se.processes.whose({ frontmost: true })[0], "frontmost process");
 		log("Frontmost process:", safeCall(() => proc.name(), "<unknown>"));
 		const items = getMenuBarItems(assertExists(proc.menuBars[0], "menuBars[0]"));
-		if (modeArg === "index") {
+		if (actionArg === "by-index") {
 			clickTopLevelMenuByIndex(items, Number(valueArg));
 			log("Done");
 			return;
@@ -215,14 +219,11 @@ function buildMenuHandler() {
 		}
 		clickExpandedMenuItemByQuery(items, query);
 		log("Done");
-	}, mode, value);
-	return {
-		menuByIndex(menuIndex) {
-			return runMenuAction("index", menuIndex);
-		},
-		menuByLetters(query) {
-			return runMenuAction("letters", query);
-		}
+	}, processName, action, value);
+}
+function buildMenuHandler(processName) {
+	return async function menu(action, value) {
+		await runMenuAction(processName, action, value);
 	};
 }
 //#endregion
