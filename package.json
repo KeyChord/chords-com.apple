@@ -1,5 +1,6 @@
 {
   "name": "@keychord/chords-com.apple",
+  "type": "module",
   "version": "0.0.0",
   "dependencies": {
     "@keychord/chords-menu": "^0.0.1",
@@ -12,9 +13,8 @@
   },
   "devDependencies": {
     "@jxa/global-type": "^1.4.0",
-    "@keychord/config": "*",
+    "@keychord/config": "^0.0.6",
     "@keychord/tsconfig": "^0.0.5",
-    "@keychord/vite-plugin": "^0.0.4",
     "typescript": "^6.0.2"
   },
   "packageManager": "pnpm@10.33.0"

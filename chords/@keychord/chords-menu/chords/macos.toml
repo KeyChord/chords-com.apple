@@ -1,0 +1,14 @@
+[config]
+name = "macOS Menu Bar"
+
+[config.js]
+module = '''
+import buildMenuHandler from '#js/menu.js';
+export const { menuByIndex, menuByLetters } = buildMenuHandler();
+'''
+
+[chords]
+'?-' = { name = "Menu Bar" }
+'-0' = { name = "Menu Bar: Item 0 (Apple Logo)", args = [] }
+'-([1-9])' = { name = "Menu Bar: Item $1", 'args:menuByIndex' = ["$1"] }
+'-([a-z]+[0-9]?)' = { name = "Menu Bar: By Letter $1", 'args:menuByLetters' = ["$1"] }
