@@ -7,7 +7,6 @@ import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 import fs from "node:fs/promises";
 import { pipeline } from "node:stream/promises";
-import ky from "ky";
 //#region ../../node_modules/.pnpm/get-port@7.2.0/node_modules/get-port/index.js
 var Locked = class extends Error {
 	constructor(port) {
@@ -406,11 +405,24 @@ function spawn$1(file, second, third, previous) {
 //#endregion
 //#region src/js/safari.ts
 async function buildSafariHandler() {
-	spawn$1("safaridriver", ["-p", (await getPorts()).toString()], { stdio: "inherit" });
+	const safariDriverPort = await getPorts();
+	spawn$1("safaridriver", ["-p", safariDriverPort.toString()], { stdio: "inherit" });
+	console.log(safariDriverPort);
+	console.log(await fetch("http://google.com"));
+	const fetchSession = async () => {
+		return await fetch(`http://127.0.0.1:${safariDriverPort}/session`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ capabilities: { alwaysMatch: { browserName: "safari" } } })
+		});
+	};
 	return async function safari() {
-		await ky.post(`http://localhost:${ky}/session`, { json: { capabilities: { alwaysMatch: { browserName: "safari" } } } });
-		const result = await runSudoCommand("safaridriver", ["--enable"]);
-		console.log(result);
+		let response = await fetchSession();
+		if ((await response.json())?.value?.message === "Could not create a session: You must enable 'Allow remote automation' in the Developer section of Safari Settings to control Safari via WebDriver.") {
+			await runSudoCommand("safaridriver", ["--enable"]);
+			response = await fetchSession();
+		}
+		console.log(response);
 	};
 }
 //#endregion
