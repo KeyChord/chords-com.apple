@@ -3,19 +3,17 @@ var name = "@keychord/chords-com.apple";
 var version = "0.0.0";
 var type = "module";
 var dependencies = {
-	"@keychord/chords-menu": "github:KeyChord/chords-menu",
+	"@keychord/chords-menu": "workspace:*",
 	"desm": "latest",
 	"get-port": "latest",
 	"jquery-as-string": "latest",
-	"jxa-run-compat": "latest",
 	"ky": "^1.14.3",
-	"nano-spawn-compat": "latest",
 	"outdent": "latest"
 };
 var devDependencies = {
-	"@jxa/global-type": "latest",
 	"@keychord/config": "catalog:",
-	"@keychord/tsconfig": "catalog:"
+	"@keychord/tsconfig": "catalog:",
+	"@types/bun": "latest"
 };
 var packageManager = "pnpm@10.33.0";
 var package_default = {
