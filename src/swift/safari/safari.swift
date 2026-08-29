@@ -1,12 +1,13 @@
-// Native Safari automation used by `src/js/safari.ts` through Bun FFI.
+// Native Safari automation exported to `src/js/safari.ts` through NodeSwift.
 //
-// The library sends Safari's `do JavaScript` Apple event directly and uses the Accessibility API
+// The add-on sends Safari's `do JavaScript` Apple event directly and uses the Accessibility API
 // to open Safari Settings at its Developer pane. No `osascript` helper process is involved.
 
 import AppKit
 import ApplicationServices
 import Carbon
 import Foundation
+import NodeAPI
 
 private let safariBundleIdentifier = "com.apple.Safari"
 
@@ -42,45 +43,20 @@ private enum SafariError: Error, CustomStringConvertible {
     }
 }
 
-// MARK: - C ABI
-
-/// Evaluates JavaScript in Safari's current tab. Returns nil on success or a heap-allocated error
-/// message that the caller releases with `chordsSafariFree`.
-@c
-public func chordsSafariRunJavaScript(
-    _ source: UnsafePointer<CChar>?
-) -> UnsafeMutablePointer<CChar>? {
-    guard let source else {
-        return strdup(SafariError.invalidJavaScript.description)
-    }
-
-    return autoreleasepool {
-        do {
-            try runJavaScript(String(cString: source))
-            return nil
-        } catch {
-            return strdup(describe(error))
+#NodeModule(exports: [
+    "runJavaScript": try NodeFunction { (source: String) throws in
+        try autoreleasepool {
+            try runJavaScript(source)
         }
-    }
-}
-
-/// Activates Safari, opens Settings, and selects its Developer toolbar item.
-@c
-public func chordsSafariOpenDeveloperSettings() -> UnsafeMutablePointer<CChar>? {
-    autoreleasepool {
-        do {
+        return try NodeUndefined()
+    },
+    "openDeveloperSettings": try NodeFunction { () throws in
+        try autoreleasepool {
             try openDeveloperSettings()
-            return nil
-        } catch {
-            return strdup(describe(error))
         }
-    }
-}
-
-@c
-public func chordsSafariFree(_ message: UnsafeMutablePointer<CChar>?) {
-    free(message)
-}
+        return try NodeUndefined()
+    },
+])
 
 private func describe(_ error: Error) -> String {
     if let error = error as? SafariError {

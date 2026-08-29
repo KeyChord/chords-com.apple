@@ -1,48 +1,26 @@
-import { CString, FFIType, dlopen } from "bun:ffi";
-import { resolveFfiPath } from "chord";
+import { resolveNativeModulePath } from "chord";
 //#region src/js/safari.ts
 /**
 * Safari handler for Chord's Bun runtime.
 *
 * Bun handles the small amount of `defaults`/application lifecycle work. Safari and the
-* Accessibility API are driven in-process by `src/ffi/safari/safari.swift`, compiled by
-* `@keychord/config` to `target/<triple>/safari/safari.dylib`.
+* Accessibility API are driven in-process by `src/swift/safari/safari.swift`, compiled by
+* `@keychord/config` to `target/<triple>/safari/safari.node`.
 */
 const safariDomain = "com.apple.Safari";
-let library;
-function openSafariLibrary() {
-	return dlopen(resolveFfiPath(import.meta, "safari"), {
-		chordsSafariRunJavaScript: {
-			args: [FFIType.cstring],
-			returns: FFIType.ptr
-		},
-		chordsSafariOpenDeveloperSettings: {
-			args: [],
-			returns: FFIType.ptr
-		},
-		chordsSafariFree: {
-			args: [FFIType.ptr],
-			returns: FFIType.void
-		}
-	});
-}
-/** NUL-terminated UTF-8 for a `cstring` argument. */
-function cstr(value) {
-	return Buffer.from(`${value}\0`, "utf8");
-}
-function throwNativeError(error) {
-	if (!error) return;
-	const message = new CString(error).toString();
-	library.symbols.chordsSafariFree(error);
-	throw new Error(message);
+let addon;
+function openSafariAddon() {
+	const module = { exports: {} };
+	process.dlopen(module, resolveNativeModulePath(import.meta, "safari"));
+	return module.exports;
 }
 function runJavaScript(source) {
-	library ??= openSafariLibrary();
-	throwNativeError(library.symbols.chordsSafariRunJavaScript(cstr(source)));
+	addon ??= openSafariAddon();
+	addon.runJavaScript(source);
 }
 function openDeveloperSettingsPane() {
-	library ??= openSafariLibrary();
-	throwNativeError(library.symbols.chordsSafariOpenDeveloperSettings());
+	addon ??= openSafariAddon();
+	addon.openDeveloperSettings();
 }
 async function readBooleanDefault(domain, key) {
 	const result = await runCommand([
