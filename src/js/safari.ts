@@ -2,10 +2,9 @@
  * Safari handler for Chord's Bun runtime.
  *
  * Bun handles the small amount of `defaults`/application lifecycle work. Safari and the
- * Accessibility API are driven in-process by `src/swift/safari/safari.swift`, compiled by
+ * Accessibility API are driven in-process by `Sources/KeychordChordsComAppleNativeSafari/safari.swift`, compiled by
  * `@keychord/config` to `target/<triple>/safari/safari.node`.
  */
-import { resolveNativeModulePath } from "chord";
 
 const safariDomain = "com.apple.Safari";
 
@@ -18,7 +17,7 @@ let addon: SafariAddon | undefined;
 
 function openSafariAddon(): SafariAddon {
   const module = { exports: {} as SafariAddon };
-  process.dlopen(module, resolveNativeModulePath(import.meta, "safari"));
+  process.dlopen(module, import.meta.chord.resolveNative("safari"));
   return module.exports;
 }
 

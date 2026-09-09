@@ -1,24 +1,17 @@
-import { resolveNativeModulePath } from "chord";
 //#region src/js/menu.ts
-/**
-* macOS menu bar handler: a thin Node-API binding over the Swift implementation in
-* `src/swift/menu/menu.swift`, which `@keychord/config` compiles to
-* `target/<triple>/menu/menu.node`. Chord runs handlers on Bun, so the addon is
-* opened in-process — no helper process, no `osascript` round trip.
-*
-* The addon is located through Chord's `chord` module (`resolveNativeModulePath`), which knows the
-* package layout (including vendored copies), so nothing here depends on where the package is
-* installed.
-*/
 let addon;
 function openMenuAddon() {
 	const module = { exports: {} };
-	process.dlopen(module, resolveNativeModulePath(import.meta, "menu"));
+	process.dlopen(module, import.meta.chord.resolveNative("menu"));
 	return module.exports;
 }
-function runMenuAction(processName, action, value) {
+async function runMenuAction(processName, action, value) {
 	addon ??= openMenuAddon();
-	addon.runMenuAction(processName, action, value);
+	if (action === "by-path") {
+		if (!Array.isArray(value) || value.length < 2 || value.some((component) => typeof component !== "string" || component.trim().length === 0)) throw new TypeError("\"by-path\" expects at least two non-empty string components");
+		return addon.runMenuAction(processName, action, JSON.stringify(value));
+	}
+	return addon.runMenuAction(processName, action, String(value));
 }
 /**
 * Builds the `emit:menu` handler. `processName` optionally names an app to activate first.
@@ -28,7 +21,7 @@ function runMenuAction(processName, action, value) {
 */
 function buildMenuHandler(processName) {
 	return function menu(action, value = 0) {
-		runMenuAction(processName ?? this?.focusedAppId, action, String(value));
+		return runMenuAction(processName ?? this?.focusedAppId, action, value);
 	};
 }
 //#endregion
