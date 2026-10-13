@@ -8,6 +8,7 @@ var repository = {
 var type = "module";
 var imports = { "#/*": "./src/js/*" };
 var devDependencies = {
+	"@keychord/chordtest": "workspace:*",
 	"@keychord/config": "catalog:",
 	"@keychord/tsconfig": "catalog:",
 	"@types/bun": "latest"

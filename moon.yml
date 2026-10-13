@@ -13,6 +13,7 @@ tasks:
     command: "vp pack"
     inputs:
       - "Sources/**/*"
+      - "src/swift/**/*"
       - "Package.swift"
       - "package.json"
       - "vite.config.ts"

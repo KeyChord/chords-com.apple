@@ -20,9 +20,9 @@ wqa = { name = "Window: Quit All", shortcut = "cmd+alt+w" }
 '?t' = { name = "Tab" }
 tn = { name = "Tab: New", shortcut = "cmd+t" }
 tq = { name = "Tab: Quit", command = "Close the current tab, or pop-up", shortcut = "cmd+w" }
-tp = { name = "Tab: Pin", 'emit:menu' = ['Window', 'Pin Tab'] }
-td = { name = "Tab: Duplicate", 'emit:menu' = ['by-path', ['Window', 'Duplicate Tab']] }
-tw = { name = "Tab: Windowize", 'emit:menu' = ['by-path', ['Window', 'Move Tab to New Window']] }
+tp = { name = "Tab: Pin", '@input:menu' = ['Window', 'Pin Tab'] }
+td = { name = "Tab: Duplicate", '@input:menu' = ['by-path', ['Window', 'Duplicate Tab']] }
+tw = { name = "Tab: Windowize", '@input:menu' = ['by-path', ['Window', 'Move Tab to New Window']] }
 't]' = { name = "Tab: Next", command = "Jump to the next open tab", shortcut = "ctrl+right" }
 't[' = { name = "Tab: Previous", command = "Jump to the previous open tab", shortcut = "ctrl+shift+right" }
 t1 = { name = "Tab 1", command = "Jump to a specific tab", shortcut = "cmd+1" }
@@ -42,4 +42,4 @@ tr = { name = "Tab: Right Move", command = "Move tabs right or left", shortcut =
 'tg]' = { name = "Tab Group: Next", shortcut = "cmd+shift+up" }
 'tg[' = { name = "Tab Group: Previous", shortcut = "cmd+shift+down" }
 
-js = { name = "JavaScript", 'emit:js' = [] }
+js = { name = "JavaScript", '@input:js' = [] }

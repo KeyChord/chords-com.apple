@@ -15,6 +15,7 @@ var dependencies = {
 	"outdent": "latest"
 };
 var devDependencies = {
+	"@keychord/chordtest": "workspace:*",
 	"@keychord/config": "catalog:",
 	"@keychord/tsconfig": "catalog:",
 	"@types/bun": "latest"

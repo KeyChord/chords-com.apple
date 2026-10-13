@@ -6,7 +6,7 @@ args = []
 
 [chords]
 '?-' = { name = "Menu Bar" }
-'-0' = { name = "Menu Bar: Apple Logo", 'emit:menu' = ['by-index', '0'] }
+'-0' = { name = "Menu Bar: Apple Logo", '@input:menu' = ['by-index', '0'] }
 
 '?-1' = { name = "1st menu" }
 '?-2' = { name = "2nd menu" }
@@ -17,7 +17,7 @@ args = []
 '?-7' = { name = "7th menu" }
 '?-8' = { name = "8th menu" }
 '?-9' = { name = "9th menu" }
-'-([1-9])' = { name = "Menu Bar: nth item", 'emit:menu' = ["by-index", "$1"] }
+'-([1-9])' = { name = "Menu Bar: nth item", '@input:menu' = ["by-index", "$1"] }
 
 '?-(a-z)' = { name = "Menu item by letter" }
-'-([a-z]+[0-9]?)' = { name = "Menu Bar: by letter", 'emit:menu' = ["by-letters", "$1"] }
+'-([a-z]+[0-9]?)' = { name = "Menu Bar: by letter", '@input:menu' = ["by-letters", "$1"] }

@@ -16,6 +16,7 @@ let package = Package(
     platforms: [.macOS("13.0")],
     products: [
         .library(name: "KeychordChordsComAppleNativeSafari", type: .dynamic, targets: ["KeychordChordsComAppleNativeSafari"]),
+        .library(name: "KeychordChordsComAppleNativeScreenContinuity", type: .dynamic, targets: ["KeychordChordsComAppleNativeScreenContinuity"]),
     ],
     dependencies: [
         .package(url: "https://github.com/kabiroberai/node-swift.git", exact: "1.5.1"),
@@ -27,6 +28,14 @@ let package = Package(
                 .product(name: "NodeAPI", package: "node-swift"),
                 .product(name: "NodeModuleSupport", package: "node-swift"),
             ]
+        ),
+        .target(
+            name: "KeychordChordsComAppleNativeScreenContinuity",
+            dependencies: [
+                .product(name: "NodeAPI", package: "node-swift"),
+                .product(name: "NodeModuleSupport", package: "node-swift"),
+            ],
+            path: "src/swift/screen-continuity"
         ),
     ],
     swiftLanguageModes: [.v5]
