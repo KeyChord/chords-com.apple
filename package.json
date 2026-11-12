@@ -1,0 +1,22 @@
+{
+  "name": "@keychord/chords-com.apple",
+  "displayName": "macOS App Stubs",
+  "version": "0.0.0",
+  "description": "Empty chord stubs for pre-installed macOS apps. App bindings are provided by separate bundle-ID packages.",
+  "categories": [
+    "macOS"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KeyChord/chords-com.apple"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "bun test --isolate"
+  },
+  "devDependencies": {
+    "@keychord/chordtest": "workspace:*",
+    "@keychord/config": "catalog:"
+  },
+  "packageManager": "pnpm@12.11.2"
+}
